@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/TAASS-2324_artigianato.iml" filepath="$PROJECT_DIR$/.idea/TAASS-2324_artigianato.iml" />
+      <module fileurl="file://$PROJECT_DIR$/craftsman-service/craftsman-service.iml" filepath="$PROJECT_DIR$/craftsman-service/craftsman-service.iml" />
+    </modules>
+  </component>
+</project>
