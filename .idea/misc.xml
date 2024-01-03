@@ -4,6 +4,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/craftsman-service/pom.xml" />
+        <option value="$PROJECT_DIR$/craftstore-service/pom.xml" />
       </list>
     </option>
   </component>

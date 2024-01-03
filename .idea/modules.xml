@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/TAASS-2324_artigianato.iml" filepath="$PROJECT_DIR$/.idea/TAASS-2324_artigianato.iml" />
       <module fileurl="file://$PROJECT_DIR$/craftsman-service/craftsman-service.iml" filepath="$PROJECT_DIR$/craftsman-service/craftsman-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/craftstore-service/craftstore-service.iml" filepath="$PROJECT_DIR$/craftstore-service/craftstore-service.iml" />
     </modules>
   </component>
 </project>
