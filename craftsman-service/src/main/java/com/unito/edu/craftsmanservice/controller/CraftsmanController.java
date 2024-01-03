@@ -1,7 +1,7 @@
 package com.unito.edu.craftsmanservice.controller;
 
 import com.unito.edu.craftsmanservice.model.Craftsman;
-import com.unito.edu.craftsmanservice.repository.CraftsmanRepository;
+import com.unito.edu.craftsmanservice.service.CraftsmanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class CraftsmanController {
 
     @Autowired
-    CraftsmanRepository craftsmanRepository;
+    private CraftsmanService craftsmanService;
 
     /**
      * This API is used to get all craftsmen.
@@ -22,28 +22,28 @@ public class CraftsmanController {
     @GetMapping("/getCraftsmen")
     public List<Craftsman> getAllCraftsmen() {
 
-        return craftsmanRepository.findAll();
+        return craftsmanService.getAllCraftsmen();
     }
 
     /**
      * This API is used to get a craftsman given its id.
-     *
-     * @return the craftsman with that id or null if not exists.
+     * @param id the craftsman id
+     * @return the craftsman with that id
      */
     @GetMapping("/getCraftsman/{id}")
-    public Craftsman getCraftsmanById(@PathVariable long id) {
+    public Craftsman getCraftsmanById(@PathVariable int id) {
 
-        return craftsmanRepository.findById(id).orElse(null);
+        return craftsmanService.getCraftsmanById(id);
     }
 
     /**
-     * This API is used to save in the database a craftsman.
-     *
+     * This method is used to save in the database a craftsman.
+     * @param craftsman the craftsman to be saved
      * @return the saved craftsman.
      */
     @PostMapping(value = "/addCraftsman")
-    public Craftsman postCraftsman(@RequestBody Craftsman craftsman){
+    public Craftsman addCraftsman(@RequestBody Craftsman craftsman){
 
-        return craftsmanRepository.save(craftsman);
+        return craftsmanService.addCraftsman(craftsman);
     }
 }

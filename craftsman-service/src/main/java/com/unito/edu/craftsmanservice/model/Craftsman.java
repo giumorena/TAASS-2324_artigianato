@@ -14,7 +14,7 @@ public class Craftsman {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private int id;
 
     @Column(name = "name", nullable = false)
     private String name;
