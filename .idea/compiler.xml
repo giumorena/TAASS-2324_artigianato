@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="craftsman-service" />
+        <module name="comment-service" />
         <module name="sampler-service" />
       </profile>
       <profile name="Annotation profile for craftstore-service" enabled="true">
@@ -22,6 +23,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="comment-service" target="17" />
       <module name="craftsman-service" target="17" />
       <module name="craftstore-service" target="17" />
       <module name="sampler-service" target="17" />
@@ -29,6 +31,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="comment-service" options="-parameters" />
       <module name="craftsman-service" options="-parameters" />
       <module name="craftstore-service" options="-parameters" />
       <module name="sampler-service" options="-parameters" />

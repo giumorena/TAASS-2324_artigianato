@@ -6,6 +6,7 @@
         <option value="$PROJECT_DIR$/craftsman-service/pom.xml" />
         <option value="$PROJECT_DIR$/craftstore-service/pom.xml" />
         <option value="$PROJECT_DIR$/sampler-service/pom.xml" />
+        <option value="$PROJECT_DIR$/comment-service/pom.xml" />
       </list>
     </option>
   </component>
