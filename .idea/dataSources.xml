@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:mariadb://localhost:3306/dbcraftstores</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="dbsamplers@localhost" uuid="f6473d6a-f44a-470b-9b37-cc15009295a2">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://localhost:3306/dbsamplers</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
