@@ -10,6 +10,7 @@
         <module name="craftsman-service" />
         <module name="comment-service" />
         <module name="sampler-service" />
+        <module name="user-service" />
       </profile>
       <profile name="Annotation profile for craftstore-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -27,6 +28,7 @@
       <module name="craftsman-service" target="17" />
       <module name="craftstore-service" target="17" />
       <module name="sampler-service" target="17" />
+      <module name="user-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -35,6 +37,7 @@
       <module name="craftsman-service" options="-parameters" />
       <module name="craftstore-service" options="-parameters" />
       <module name="sampler-service" options="-parameters" />
+      <module name="user-service" options="-parameters" />
     </option>
   </component>
 </project>
