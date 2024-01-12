@@ -27,6 +27,9 @@ public class Craftstore {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "sampler_id")
+    private int samplerId;
+
     /* Unidirectional One-To-Many relationship.
     *  A craftstore may have many ownerships (and then owners),
     *  while an ownership (not owner!) refers only to one craftstore.
@@ -50,4 +53,12 @@ public class Craftstore {
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="craftstore_id")
     private List<Address> addressList;
+
+    /* Unidirectional One-To-Many relationship.
+     *  A craftstore may have received multiple comments,
+     *  while a comment may refer to only one craftstore.
+     *  A foreign key craftstore_id will be added to Comment table */
+    @OneToMany (fetch=FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name="craftstore_id")
+    private List<Comment> commentList;
 }

@@ -1,15 +1,19 @@
 package com.unito.edu.craftstoreservice.service;
 
 import com.unito.edu.craftstoreservice.model.Craftstore;
-import com.unito.edu.craftstoreservice.model.dto.CraftstoreDto;
-import com.unito.edu.craftstoreservice.model.dto.CraftstoreMapper;
+import com.unito.edu.craftstoreservice.model.Sampler;
+import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
+import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
 import com.unito.edu.craftstoreservice.repository.CraftstoreRepository;
 import com.unito.edu.craftstoreservice.service.specification.CraftstoreSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CraftstoreService {
@@ -18,7 +22,7 @@ public class CraftstoreService {
     private CraftstoreRepository craftstoreRepository;
 
     @Autowired
-    private CraftstoreMapper craftstoreMapper;
+    private RestTemplate restTemplate;
 
     /**
      * This method is used to get all craftstores.
@@ -37,9 +41,9 @@ public class CraftstoreService {
      * @param region the craftstore region (optional)
      * @param province the craftstore province (optional)
      * @param city the craftstore city (optional)
-     * @return a list of all craftstores (with only the DTO data) that matches with the filters
+     * @return a list of all craftstores (with only the MinDTO data) that matches with the filters
      */
-    public List<CraftstoreDto> searchCraftstoresByFilters(String name, String category, String region, String province, String city) {
+    public List<CraftstoreMinDto> searchCraftstoresByFilters(String name, String category, String region, String province, String city) {
 
         Specification<Craftstore> filters = Specification.where(null);
 
@@ -63,17 +67,36 @@ public class CraftstoreService {
             filters=filters.and(CraftstoreSpecification.isInCity(city));
         }
 
-        return craftstoreMapper.toDtoList(craftstoreRepository.findAll(filters));
+        List<Craftstore> craftstoreList= craftstoreRepository.findAll(filters);
+
+        // Mapping to CraftstoreMinDto list
+        List<CraftstoreMinDto> list = new ArrayList<>( craftstoreList.size() );
+        for ( Craftstore craftstore : craftstoreList ) {
+            list.add( new CraftstoreMinDto(craftstore.getId(), craftstore.getName(),
+                    craftstore.getCategory(), craftstore.getDescription(), craftstore.getOwnerList()) );
+        }
+
+        return list;
     }
 
     /**
      * This method is used to get a craftstore given its id.
      * @param id the craftstore id
-     * @return the craftstore with that id
+     * @return the craftstore (with all the MaxDTO data) with that id
      */
-    public Craftstore getCraftstoreById(int id) {
+    public CraftstoreMaxDto getCraftstoreById(int id) {
 
-        return craftstoreRepository.findById(id).orElse(null);
+        Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
+
+        // Call to sampler-microservice to retrieve the craftstore sampler, given its id
+        Sampler sampler = restTemplate.getForObject("http://localhost:8083/getSampler/" + craftstore.get().getSamplerId(),Sampler.class);
+
+        // Mapping to CraftstoreMaxDto Object
+        CraftstoreMaxDto craftstoreMaxDto = new CraftstoreMaxDto(craftstore.get().getId(), craftstore.get().getName(),
+                craftstore.get().getCategory(),craftstore.get().getDescription(),sampler,craftstore.get().getOwnerList(),
+                craftstore.get().getContactList(),craftstore.get().getAddressList(),craftstore.get().getCommentList());
+
+        return craftstoreMaxDto;
     }
 
     /**

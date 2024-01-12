@@ -1,7 +1,8 @@
 package com.unito.edu.craftstoreservice.controller;
 
 import com.unito.edu.craftstoreservice.model.Craftstore;
-import com.unito.edu.craftstoreservice.model.dto.CraftstoreDto;
+import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
+import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
 import com.unito.edu.craftstoreservice.service.CraftstoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +34,14 @@ public class CraftstoreController {
      * @param region the craftstore region (optional)
      * @param province the craftstore province (optional)
      * @param city the craftstore city (optional)
-     * @return a list of all craftstores (with only the DTO data) that matches with the filters
+     * @return a list of all craftstores (with only the MinDTO data) that matches with the filters
      */
     @GetMapping("/searchCraftstores")
-    public List<CraftstoreDto> searchCraftstoresByFilters(@RequestParam(required = false) String name,
-                                                          @RequestParam(required = false) String category,
-                                                          @RequestParam (required = false) String region,
-                                                          @RequestParam (required = false) String province,
-                                                          @RequestParam (required = false) String city) {
+    public List<CraftstoreMinDto> searchCraftstoresByFilters(@RequestParam(required = false) String name,
+                                                             @RequestParam(required = false) String category,
+                                                             @RequestParam (required = false) String region,
+                                                             @RequestParam (required = false) String province,
+                                                             @RequestParam (required = false) String city) {
 
         return craftstoreService.searchCraftstoresByFilters(name,category,region,province,city);
     }
@@ -48,10 +49,10 @@ public class CraftstoreController {
     /**
      * This API is used to get a craftstore given its id.
      * @param id the craftstore id
-     * @return the craftstore with that id
+     * @return the craftstore (with all the MaxDTO data) with that id
      */
     @GetMapping("/getCraftstore/{id}")
-    public Craftstore getCraftstoreById(@PathVariable int id) {
+    public CraftstoreMaxDto getCraftstoreById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreById(id);
     }

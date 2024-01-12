@@ -9,18 +9,12 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CraftstoreDto {
+@AllArgsConstructor
+public class CraftstoreMinDto {
     private int id;
     private String name;
     private String category;
     private String description;
     private List<Ownership> ownerList;
 
-    public CraftstoreDto(int id, String name, String category, String description, List<Ownership> ownerList) {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.description = description;
-        this.ownerList = ownerList;
-    }
 }
