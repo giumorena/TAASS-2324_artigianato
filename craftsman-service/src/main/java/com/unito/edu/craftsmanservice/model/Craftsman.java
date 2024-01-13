@@ -3,6 +3,8 @@ package com.unito.edu.craftsmanservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -21,4 +23,13 @@ public class Craftsman {
 
     @Column(name = "craft")
     private String craft;
+
+    /* Unidirectional One-To-Many relationship.
+     *  A craftsman may have many ownerships (and then craftstores),
+     *  while an ownership (not craftstore!) refers only to one craftsman.
+     *  A foreign key craftsman_id will be added to Ownership table */
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="craftsman_id")
+    private List<Ownership> craftstoreList;
+
 }
