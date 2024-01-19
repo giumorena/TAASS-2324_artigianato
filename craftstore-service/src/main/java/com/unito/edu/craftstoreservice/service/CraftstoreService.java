@@ -89,7 +89,7 @@ public class CraftstoreService {
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
 
         // Call to sampler-microservice to retrieve the craftstore sampler, given its id
-        Sampler sampler = restTemplate.getForObject("http://localhost:8083/getSampler/" + craftstore.get().getSamplerId(),Sampler.class);
+        Sampler sampler = restTemplate.getForObject("http://SAMPLER-SERVICE/sampler/getSampler/" + craftstore.get().getSamplerId(),Sampler.class);
 
         // Mapping to CraftstoreMaxDto Object
         CraftstoreMaxDto craftstoreMaxDto = new CraftstoreMaxDto(craftstore.get().getId(), craftstore.get().getName(),

@@ -1,0 +1,40 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: CRAFTSMAN-SERVICE
+          uri: lb://CRAFTSMAN-SERVICE
+          predicates:
+            - Path=/craftsman/**
+        - id: CRAFTSTORE-SERVICE
+          uri: lb://CRAFTSTORE-SERVICE
+          predicates:
+            - Path=/craftstore/**
+        - id: SAMPLER-SERVICE
+          uri: lb://SAMPLER-SERVICE
+          predicates:
+            - Path=/sampler/**
+        - id: COMMENT-SERVICE
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/comment/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
