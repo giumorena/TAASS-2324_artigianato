@@ -1,11 +1,14 @@
 package com.unito.edu.craftstoreservice.service;
 
+import com.unito.edu.craftstoreservice.model.Comment;
 import com.unito.edu.craftstoreservice.model.Craftstore;
 import com.unito.edu.craftstoreservice.model.Sampler;
+import com.unito.edu.craftstoreservice.model.dto.CommentMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
 import com.unito.edu.craftstoreservice.repository.CraftstoreRepository;
 import com.unito.edu.craftstoreservice.service.specification.CraftstoreSpecification;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -107,5 +110,19 @@ public class CraftstoreService {
     public Craftstore addCraftstore(Craftstore craftstore){
 
         return craftstoreRepository.save(craftstore);
+    }
+
+    /**
+     * This method is used to add a comment to a craftstore comment list.
+     * @param id the craftstore id
+     * @param comment the comment to be added
+     * @return the updated craftstore
+     */
+    public Craftstore addComment(int id, Comment comment){
+
+        Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
+        craftstore.get().getCommentList().add(comment);
+
+        return craftstoreRepository.save(craftstore.get());
     }
 }

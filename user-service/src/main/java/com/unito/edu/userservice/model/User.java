@@ -25,7 +25,7 @@ public class User {
      *  A user can post multiple comments,
      *  while a comment may have been posted by only one user.
      *  A foreign key user_id will be added to Comment table */
-    @OneToMany (fetch=FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany (fetch=FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name="user_id")
     private List<Comment> commentList;
 }

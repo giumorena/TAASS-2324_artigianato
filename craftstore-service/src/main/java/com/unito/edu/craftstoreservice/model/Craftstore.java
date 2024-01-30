@@ -58,7 +58,7 @@ public class Craftstore {
      *  A craftstore may have received multiple comments,
      *  while a comment may refer to only one craftstore.
      *  A foreign key craftstore_id will be added to Comment table */
-    @OneToMany (fetch=FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany (fetch=FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
     @JoinColumn(name="craftstore_id")
     private List<Comment> commentList;
 }

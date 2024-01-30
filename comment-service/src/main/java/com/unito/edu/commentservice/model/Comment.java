@@ -3,6 +3,8 @@ package com.unito.edu.commentservice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
@@ -10,10 +12,10 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "comment")
-public class Comment {
+public class Comment implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "craftstore_id", nullable = false)

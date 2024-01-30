@@ -38,6 +38,7 @@ public class CommentController {
 
     /**
      * This method is used to save in the database a comment.
+     * Also, a message with the saved comment is sent to the message broker (publish)
      * @param comment the comment to be saved
      * @return the saved comment.
      */
