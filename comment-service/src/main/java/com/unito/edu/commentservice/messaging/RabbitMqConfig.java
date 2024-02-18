@@ -1,5 +1,7 @@
 package com.unito.edu.commentservice.messaging;
 
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.ExchangeBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -10,13 +12,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * This class creates the connection to the rabbitMQ server
- * and the Rabbit Template used to send messages
+ * This class creates the connection to the rabbitMQ server,
+ * the direct exchange where comments will be published (if not exists)
+ * and the Rabbit Template used to send messages with comments
  */
 @Configuration
 public class RabbitMqConfig {
 
-    @Value("${spring.rabbitmq.host}")
+    //@Value("localhost")
+    @Value("rabbitmq")
     String host;
 
     @Value("${spring.rabbitmq.username}")
@@ -24,6 +28,15 @@ public class RabbitMqConfig {
 
     @Value("${spring.rabbitmq.password}")
     String password;
+
+    @Value("craft.direct")
+    private String exchange;
+
+    // If the exchange already exists it is not created
+    @Bean
+    Exchange myExchange() {
+        return ExchangeBuilder.directExchange(exchange).durable(true).build();
+    }
 
     @Bean
     CachingConnectionFactory connectionFactory() {

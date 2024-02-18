@@ -13,7 +13,7 @@ import lombok.*;
 public class Ownership {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "craftstore_id", nullable = false)

@@ -1,0 +1,26 @@
+version: '3.2'
+services:
+  service-registry:
+    build: ../service-registry/
+    image: service-registry
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - craftnetwork
+
+  api-gateway:
+    build: .
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-registry
+    networks:
+      - craftnetwork
+
+networks:
+  craftnetwork:
+
+# docker-compose up

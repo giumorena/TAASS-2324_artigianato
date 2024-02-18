@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+  service-registry:
+    build: .
+    image: service-registry
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+
+# docker-compose up

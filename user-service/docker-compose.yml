@@ -18,8 +18,7 @@ services:
     depends_on:
       - service-registry
       - comment-service
-      - sampler-service
-      - craftstore-service
+      - user-service
     networks:
       - craftnetwork
 
@@ -27,7 +26,7 @@ services:
     container_name: mariadb-comment
     image: "mariadb"
     ports:
-      - "3308:3306"
+      - "3306:3306"
     volumes:
       - comment-data:/var/lib/mariadb/data
     networks:
@@ -60,76 +59,42 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - RABBITMQ_HOST=rabbitmq
 
-  mariadb-sampler:
-    container_name: mariadb-sampler
+  mariadb-user:
+    container_name: mariadb-user
     image: "mariadb"
     ports:
       - "3307:3306"
     volumes:
-      - sampler-data:/var/lib/mariadb/data
+      - user-data:/var/lib/mariadb/data
     networks:
       - craftnetwork
     environment:
-      MARIADB_DATABASE: dbsamplers
-      MARIADB_USER: sampler
-      MARIADB_PASSWORD: sampler
+      MARIADB_DATABASE: dbusers
+      MARIADB_USER: user
+      MARIADB_PASSWORD: user
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
       restart: unless-stopped
 
-  sampler-service:
-    build: ../sampler-service/
-    image: sampler-service
-    container_name: sampler-service
-    ports:
-      - "8083:8083"
-    deploy:
-      restart_policy:
-        condition: on-failure
-    depends_on:
-      - service-registry
-      - mariadb-sampler
-    networks:
-      - craftnetwork
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-sampler:3306/dbsamplers
-      - SERVER_PORT=8083
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-
-  mariadb-craftstore:
-    container_name: mariadb-craftstore
-    image: "mariadb"
-    ports:
-      - "3306:3306"
-    volumes:
-      - craftstore-data:/var/lib/mariadb/data
-    networks:
-      - craftnetwork
-    environment:
-      MARIADB_DATABASE: dbcraftstores
-      MARIADB_USER: craftstore
-      MARIADB_PASSWORD: craftstore
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
-      restart: unless-stopped
-
-  craftstore-service:
+  user-service:
     build: .
-    image: craftstore-service
-    container_name: craftstore-service
+    image: user-service
+    container_name: user-service
     ports:
-      - "8082:8082"
+      - "8085:8085"
     deploy:
       restart_policy:
         condition: on-failure
     depends_on:
       - service-registry
-      - mariadb-craftstore
-      - sampler-service
+      - mariadb-user
+      - rabbitmq
     networks:
       - craftnetwork
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-craftstore:3306/dbcraftstores
-      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-user:3306/dbusers
+      - SERVER_PORT=8085
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - RABBITMQ_HOST=rabbitmq
 
   rabbitmq:
     container_name: rabbitmq
@@ -148,8 +113,7 @@ networks:
 
 volumes:
   comment-data:
-  sampler-data:
-  craftstore-data:
+  user-data:
   rabbitmq-data:
 
 # docker-compose up

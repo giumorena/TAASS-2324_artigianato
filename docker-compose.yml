@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   service-registry:
-    build: ../service-registry/
+    build: ./service-registry/
     image: service-registry
     container_name: service-registry
     ports:
@@ -10,7 +10,7 @@ services:
       - craftnetwork
 
   api-gateway:
-    build: ../api-gateway/
+    build: ./api-gateway/
     image: api-gateway
     container_name: api-gateway
     ports:
@@ -20,6 +20,8 @@ services:
       - comment-service
       - sampler-service
       - craftstore-service
+      - craftsman-service
+      - user-service
     networks:
       - craftnetwork
 
@@ -40,7 +42,7 @@ services:
       restart: unless-stopped
 
   comment-service:
-    build: ../comment-service/
+    build: ./comment-service/
     image: comment-service
     container_name: comment-service
     ports:
@@ -77,7 +79,7 @@ services:
       restart: unless-stopped
 
   sampler-service:
-    build: ../sampler-service/
+    build: ./sampler-service/
     image: sampler-service
     container_name: sampler-service
     ports:
@@ -112,7 +114,7 @@ services:
       restart: unless-stopped
 
   craftstore-service:
-    build: .
+    build: ./craftstore-service/
     image: craftstore-service
     container_name: craftstore-service
     ports:
@@ -130,6 +132,78 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-craftstore:3306/dbcraftstores
       - SERVER_PORT=8082
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  mariadb-craftsman:
+    container_name: mariadb-craftsman
+    image: "mariadb"
+    ports:
+      - "3309:3306"
+    volumes:
+      - craftsman-data:/var/lib/mariadb/data
+    networks:
+      - craftnetwork
+    environment:
+      MARIADB_DATABASE: dbcraftsmen
+      MARIADB_USER: craftsman
+      MARIADB_PASSWORD: craftsman
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+      restart: unless-stopped
+
+  craftsman-service:
+    build: ./craftsman-service/
+    image: craftsman-service
+    container_name: craftsman-service
+    ports:
+      - "8081:8081"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - service-registry
+      - mariadb-craftsman
+    networks:
+      - craftnetwork
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-craftsman:3306/dbcraftsmen
+      - SERVER_PORT=8081
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  mariadb-user:
+    container_name: mariadb-user
+    image: "mariadb"
+    ports:
+      - "3310:3306"
+    volumes:
+      - user-data:/var/lib/mariadb/data
+    networks:
+      - craftnetwork
+    environment:
+      MARIADB_DATABASE: dbusers
+      MARIADB_USER: user
+      MARIADB_PASSWORD: user
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+      restart: unless-stopped
+
+  user-service:
+    build: ./user-service/
+    image: user-service
+    container_name: user-service
+    ports:
+      - "8085:8085"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - service-registry
+      - mariadb-user
+      - rabbitmq
+    networks:
+      - craftnetwork
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-user:3306/dbusers
+      - SERVER_PORT=8085
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - RABBITMQ_HOST=rabbitmq
 
   rabbitmq:
     container_name: rabbitmq
@@ -150,6 +224,8 @@ volumes:
   comment-data:
   sampler-data:
   craftstore-data:
+  craftsman-data:
+  user-data:
   rabbitmq-data:
 
 # docker-compose up

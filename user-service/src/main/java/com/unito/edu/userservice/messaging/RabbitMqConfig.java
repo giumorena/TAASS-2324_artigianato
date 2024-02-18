@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * This class creates the connection to the rabbitMQ server, the Rabbit Template,
- * the direct exchange where Comment microservice will publish comments,
+ * the direct exchange where comments will be published (if not exists),
  * the queue where User microservice will be able to receive comments,
  * and the binding between them using a routing key for comments (subscribe)
  */
@@ -34,7 +34,8 @@ public class RabbitMqConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    @Value("${spring.rabbitmq.host}")
+    //@Value("localhost")
+    @Value("rabbitmq")
     private String host;
 
     @Bean
@@ -42,6 +43,7 @@ public class RabbitMqConfig {
         return new Queue(queue, true);
     }
 
+    // If the exchange already exists it is not created
     @Bean
     Exchange myExchange() {
         return ExchangeBuilder.directExchange(exchange).durable(true).build();

@@ -49,7 +49,7 @@ public class SamplerController {
     }
 
     /**
-     * This API is used to add a product in a sampler.
+     * This API is used to add a product to a sampler.
      * @param id the sampler id
      * @param product the product to be added
      * @return the updated sampler

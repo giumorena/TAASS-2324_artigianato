@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send messages to the direct exchange that is supposed to already exist
+ * This class is used to send messages to the direct exchange
  */
 @Component
 public class RabbitMqSender {

@@ -1,0 +1,80 @@
+version: '3.2'
+services:
+  service-registry:
+    build: ../service-registry/
+    image: service-registry
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - craftnetwork
+
+  api-gateway:
+    build: ../api-gateway/
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-registry
+      - comment-service
+    networks:
+      - craftnetwork
+
+  mariadb-comment:
+    container_name: mariadb-comment
+    image: "mariadb"
+    ports:
+      - "3306:3306"
+    volumes:
+      - comment-data:/var/lib/mariadb/data
+    networks:
+      - craftnetwork
+    environment:
+      MARIADB_DATABASE: dbcomments
+      MARIADB_USER: comment
+      MARIADB_PASSWORD: comment
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+      restart: unless-stopped
+
+  comment-service:
+    build: .
+    image: comment-service
+    container_name: comment-service
+    ports:
+      - "8084:8084"
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - service-registry
+      - mariadb-comment
+      - rabbitmq
+    networks:
+      - craftnetwork
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-comment:3306/dbcomments
+      - SERVER_PORT=8084
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - RABBITMQ_HOST=rabbitmq
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - craftnetwork
+    restart: unless-stopped
+
+networks:
+  craftnetwork:
+
+volumes:
+  comment-data:
+  rabbitmq-data:
+
+# docker-compose up

@@ -1,6 +1,6 @@
 spring:
   rabbitmq:
-    host: localhost
+    #host: localhost
     password: guest
     port: 15672
     username: guest
