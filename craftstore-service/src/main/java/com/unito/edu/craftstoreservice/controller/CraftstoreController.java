@@ -1,6 +1,9 @@
 package com.unito.edu.craftstoreservice.controller;
 
+import com.unito.edu.craftstoreservice.model.Comment;
 import com.unito.edu.craftstoreservice.model.Craftstore;
+import com.unito.edu.craftstoreservice.model.Sampler;
+import com.unito.edu.craftstoreservice.model.dto.CraftstoreInfoDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
 import com.unito.edu.craftstoreservice.service.CraftstoreService;
@@ -34,7 +37,7 @@ public class CraftstoreController {
      * @param region the craftstore region (optional)
      * @param province the craftstore province (optional)
      * @param city the craftstore city (optional)
-     * @return a list of all craftstores (with only the MinDTO data) that matches with the filters
+     * @return a list of all craftstores (with only the MinDTO data) that match the filters
      */
     @GetMapping("/searchCraftstores")
     public List<CraftstoreMinDto> searchCraftstoresByFilters(@RequestParam(required = false) String name,
@@ -47,6 +50,52 @@ public class CraftstoreController {
     }
 
     /**
+     * This method is used to search craftstores based on filters and with pagination.
+     * @param name the craftstore name (optional)
+     * @param category the craftstore category (optional)
+     * @param region the craftstore region (optional)
+     * @param province the craftstore province (optional)
+     * @param city the craftstore city (optional)
+     * @param page the page index (one-based, default 1)
+     * @param size the page size (default 3)
+     * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page
+     */
+    @GetMapping("/searchCraftstoresPage")
+    public List<CraftstoreMinDto> searchCraftstoresByFiltersAndPages(@RequestParam(required = false) String name,
+                                                                     @RequestParam(required = false) String category,
+                                                                     @RequestParam (required = false) String region,
+                                                                     @RequestParam (required = false) String province,
+                                                                     @RequestParam (required = false) String city,
+                                                                     @RequestParam(defaultValue = "1") int page,
+                                                                     @RequestParam(defaultValue = "3") int size) {
+
+        return craftstoreService.searchCraftstoresByFiltersAndPages(name,category,region,province,city,page,size);
+    }
+
+    /**
+     * This method is used to count the number of craftstores pages that match the filters.
+     * @param name the craftstore name (optional)
+     * @param category the craftstore category (optional)
+     * @param region the craftstore region (optional)
+     * @param province the craftstore province (optional)
+     * @param city the craftstore city (optional)
+     * @param page the page index (one-based, default 1)
+     * @param size the page size (default 3)
+     * @return the number of craftstores pages that match the filters.
+     */
+    @GetMapping("/countCraftstoresPages")
+    public int craftstoresPagesNumber(@RequestParam(required = false) String name,
+                                       @RequestParam(required = false) String category,
+                                       @RequestParam (required = false) String region,
+                                       @RequestParam (required = false) String province,
+                                       @RequestParam (required = false) String city,
+                                       @RequestParam(defaultValue = "1") int page,
+                                       @RequestParam(defaultValue = "3") int size) {
+
+        return craftstoreService.craftstoresPagesNumber(name,category,region,province,city,page,size);
+    }
+
+    /**
      * This API is used to get a craftstore given its id.
      * @param id the craftstore id
      * @return the craftstore (with all the MaxDTO data) with that id
@@ -55,6 +104,39 @@ public class CraftstoreController {
     public CraftstoreMaxDto getCraftstoreById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreById(id);
+    }
+
+    /**
+     * This API is used to get craftstore information given its id.
+     * @param id the craftstore id
+     * @return the information (with only the InfoDTO data) about craftstore with that id
+     */
+    @GetMapping("/getCraftstoreInfo/{id}")
+    public CraftstoreInfoDto getCraftstoreInfoById(@PathVariable int id) {
+
+        return craftstoreService.getCraftstoreInfoById(id);
+    }
+
+    /**
+     * This API is used to get a craftstore's sampler, given the craftstore id.
+     * @param id the craftstore id
+     * @return the craftstore's sampler
+     */
+    @GetMapping("/getCraftstoreSampler/{id}")
+    public Sampler getCraftstoreSamplerById(@PathVariable int id) {
+
+        return craftstoreService.getCraftstoreSamplerById(id);
+    }
+
+    /**
+     * This API is used to get comments related to a craftstore given its id.
+     * @param id the craftstore id
+     * @return the comments related to the craftstore with that id
+     */
+    @GetMapping("/getCraftstoreComments/{id}")
+    public List<Comment> getCraftstoreCommentsById(@PathVariable int id) {
+
+        return craftstoreService.getCraftstoreCommentsById(id);
     }
 
     /**
