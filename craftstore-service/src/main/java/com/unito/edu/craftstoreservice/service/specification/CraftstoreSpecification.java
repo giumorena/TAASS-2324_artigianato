@@ -21,24 +21,33 @@ public class CraftstoreSpecification {
     }
 
     // Filter to take craftstores by region
+    // The distinct clause is for not considering the same craftstore multiple times
+    // if it has multiple addresses that match the criteria
     public static Specification<Craftstore> isInRegion(String region){
         return (root, query, criteriaBuilder) ->{
+            query.distinct(true);
             Join<Craftstore, Address> addressJoin =root.join("addressList",JoinType.INNER);
             return criteriaBuilder.equal(addressJoin.get("region"),region);
         };
     }
 
     // Filter to take craftstores by province
+    // The distinct clause is for not considering the same craftstore multiple times
+    // if it has multiple addresses that match the criteria
     public static Specification<Craftstore> isInProvince(String province){
         return (root, query, criteriaBuilder) ->{
+            query.distinct(true);
             Join<Craftstore, Address> addressJoin =root.join("addressList",JoinType.INNER);
             return criteriaBuilder.equal(addressJoin.get("province"),province);
         };
     }
 
     // Filter to take craftstores by city
+    // The distinct clause is for not considering the same craftstore multiple times
+    // if it has multiple addresses that match the criteria
     public static Specification<Craftstore> isInCity(String city){
         return (root, query, criteriaBuilder) ->{
+            query.distinct(true);
             Join<Craftstore, Address> addressJoin =root.join("addressList",JoinType.INNER);
             return criteriaBuilder.equal(addressJoin.get("city"),city);
         };
