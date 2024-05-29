@@ -26,7 +26,7 @@ public class RabbitMqReceiver {
         System.out.println("Craftstore microservice received: " + comment);
 
         craftstoreService.addComment(comment.getCraftstoreId(), new Comment(comment.getId(),
-                comment.getUserId(),comment.getUserName(),comment.getText()));
+                comment.getUserId(),comment.getUserName(),comment.getPostDate(),comment.getText()));
 
     }
 }

@@ -1,8 +1,8 @@
 import {fetchCraftstoreInfoById} from "@/app/lib/data";
-import CraftstoreGeneral from "@/app/ui/dashguest/craftstore-general";
-import CraftstoreAddress from "@/app/ui/dashguest/craftstore-address";
-import CraftstoreOwner from "@/app/ui/dashguest/craftstore-owner";
-import CraftstoreContact from "@/app/ui/dashguest/craftstore-contact";
+import CraftstoreGeneral from "@/app/ui/craftstores/craftstore-general";
+import CraftstoreAddress from "@/app/ui/craftstores/craftstore-address";
+import CraftstoreOwner from "@/app/ui/craftstores/craftstore-owner";
+import CraftstoreContact from "@/app/ui/craftstores/craftstore-contact";
 import {ShowCraftstoreComments, ShowCraftstoreInfo, ShowCraftstoreProducts} from "@/app/ui/dashguest/buttons-guest";
 
 export default async function CraftstoreInfo({

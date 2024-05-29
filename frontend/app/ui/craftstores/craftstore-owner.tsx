@@ -1,6 +1,6 @@
 import {lusitana} from "@/app/ui/fonts";
 import {Ownership} from "@/app/lib/definitions";
-import OwnersList from "@/app/ui/dashguest/owners-list";
+import OwnersList from "@/app/ui/craftstores/owners-list";
 
 export default function CraftstoreOwner({ owlist }: { owlist: Ownership[] }) {
     return (

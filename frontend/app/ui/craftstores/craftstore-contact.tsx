@@ -1,6 +1,6 @@
 import {Contact} from "@/app/lib/definitions";
 import {lusitana} from "@/app/ui/fonts";
-import {AtSymbolIcon,PhoneIcon} from "@heroicons/react/24/outline";
+import {EnvelopeIcon,PhoneIcon} from "@heroicons/react/24/outline";
 
 export default function CraftstoreContact({ conlist }: { conlist: Contact[] }) {
     return (
@@ -12,7 +12,7 @@ export default function CraftstoreContact({ conlist }: { conlist: Contact[] }) {
                 <ul className="max-w-md space-y-1 list-none">
                     {conlist.map((contact) => (
                                     <li key={contact.id}>
-                                        {contact.type?(contact.type==='email'?<AtSymbolIcon className="w-5"/>:<PhoneIcon className="w-5"/>):null}
+                                        {contact.type?(contact.type==='email'?<EnvelopeIcon className="w-5"/>:<PhoneIcon className="w-5"/>):null}
                                         <strong>{contact.contactDetail}</strong>
                                         {contact.description?' ('+contact.description + ')':''}
                                     </li>

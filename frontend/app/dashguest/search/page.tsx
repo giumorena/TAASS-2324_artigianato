@@ -3,7 +3,7 @@ import CraftstoreSearch from "@/app/ui/dashguest/craftstore-search";
 import CraftstoresTable from "@/app/ui/dashguest/craftstores-table";
 import Skeleton from "@/app/ui/skeletons";
 import { Suspense } from 'react';
-import {fetchCraftstoresPages} from "@/app/lib/data";
+import {fetchNumberOfCraftstoresPages} from "@/app/lib/data";
 import Pagination from "@/app/ui/pagination";
 
 export default async function Page({
@@ -27,7 +27,7 @@ export default async function Page({
 
     const query = sparams.toString() || '';
 
-    const totalPages = await fetchCraftstoresPages(query);
+    const totalPages = await fetchNumberOfCraftstoresPages(query);
 
     console.log("searchparams="+ JSON.stringify(searchParams));
     console.log("query=" + query);

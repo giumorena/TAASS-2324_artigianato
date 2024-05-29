@@ -9,7 +9,7 @@ export type Ownership = {
   craftsmanName: string;
 }
 
-export type CraftstoresTable = {
+export type Craftstore = {
   id: number;
   name: string;
   category: string;
@@ -39,10 +39,29 @@ export type Product = {
   price: number;
 }
 
-export type Comment = {
+export type CraftstoreComment = {
   id: number;
   userId: number;
   userName: string;
+  postDate: string;
+  text: string;
+}
+
+export type UserComment = {
+  id: number;
+  craftstoreId: number;
+  craftstoreName: string;
+  postDate: string;
+  text: string;
+}
+
+export type Comment = {
+  //id: number;
+  craftstoreId: number;
+  craftstoreName: string;
+  userId: number;
+  userName: string;
+  //postDate: string;
   text: string;
 }
 

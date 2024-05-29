@@ -1,9 +1,7 @@
-import Form from '@/app/ui/invoices/edit-form';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
-import { fetchCustomers } from '@/app/lib/data';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
-import CraftstoreComments from "@/app/ui/dashguest/craftstore-comments";
+import CraftstoreComments from "@/app/ui/craftstores/craftstore-comments";
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;

@@ -1,24 +1,21 @@
-import {fetchFilteredPagedCraftstores} from "@/app/lib/data";
-import InvoiceStatus from "@/app/ui/invoices/status";
-import {formatCurrency, formatDateToLocal} from "@/app/lib/utils";
-import {DeleteInvoice, UpdateInvoice} from "@/app/ui/invoices/buttons";
-import {CraftstoresTable, Ownership} from "@/app/lib/definitions";
+import {fetchFilteredSortedPagedCraftstores} from "@/app/lib/data";
+import {Craftstore} from "@/app/lib/definitions";
 import {ShowCraftstoreInfo,ShowCraftstoreProducts,ShowCraftstoreComments} from "@/app/ui/dashguest/buttons-guest";
-import OwnersList from "@/app/ui/dashguest/owners-list";
+import OwnersList from "@/app/ui/craftstores/owners-list";
 
 export default async function CraftstoresTable({
                                                 query,
                                             }: {
     query: string;
 }) {
-    const craftstores = await fetchFilteredPagedCraftstores(query);
+    const craftstores = await fetchFilteredSortedPagedCraftstores(query);
 
     return (
         <div className="mt-6 flow-root">
             <div className="inline-block min-w-full align-middle">
                 <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
                     <div className="md:hidden">
-                        {craftstores?.map((craftstore:CraftstoresTable) => (
+                        {craftstores?.map((craftstore:Craftstore) => (
                             <div
                                 key={craftstore.id}
                                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -64,7 +61,7 @@ export default async function CraftstoresTable({
                         </tr>
                         </thead>
                         <tbody className="bg-white">
-                        {craftstores?.map((craftstore:CraftstoresTable) => (
+                        {craftstores?.map((craftstore:Craftstore) => (
                             <tr
                                 key={craftstore.id}
                                 className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

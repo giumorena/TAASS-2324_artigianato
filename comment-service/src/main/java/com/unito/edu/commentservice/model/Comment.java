@@ -2,8 +2,10 @@ package com.unito.edu.commentservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -29,6 +31,10 @@ public class Comment implements Serializable {
 
     @Column(name = "user_name", nullable = false)
     private String userName;
+
+    @Column(name = "post_date", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDate postDate;
 
     @Column(name = "text", nullable = false)
     private String text;

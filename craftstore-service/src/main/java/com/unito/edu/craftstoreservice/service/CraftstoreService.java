@@ -11,6 +11,7 @@ import com.unito.edu.craftstoreservice.repository.CraftstoreRepository;
 import com.unito.edu.craftstoreservice.service.specification.CraftstoreSpecification;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +42,23 @@ public class CraftstoreService {
     public List<Craftstore> getAllCraftstores() {
 
         return craftstoreRepository.findAll();
+    }
+
+    /**
+     * This method is used to get all craftstores (only MinDto data) sorted by craftstore name.
+     *
+     * @return a list with all craftstores (only MinDto data) sorted by craftstore name.
+     */
+    public List<CraftstoreMinDto> getAllSortedCraftstores() {
+
+        List<Craftstore> craftstoreList= craftstoreRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+
+        List<CraftstoreMinDto> list = new ArrayList<>( craftstoreList.size() );
+        for ( Craftstore craftstore : craftstoreList ) {
+            list.add(new CraftstoreMinDto(craftstore.getId(),craftstore.getName(),craftstore.getCategory(),craftstore.getDescription(),craftstore.getOwnerList()));
+        }
+
+        return list;
     }
 
     /**
@@ -95,9 +115,11 @@ public class CraftstoreService {
      * @param city the craftstore city (optional)
      * @param page the page index (one-based, default 1)
      * @param size the page size (default 3)
-     * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page
+     * @param sortField the name of the field in the entity object (not in the database table) used for sorting (default name)
+     * @param sortDirection the sort direction (default ASC)
+     * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page, sorted by the sortField
      */
-    public List<CraftstoreMinDto> searchCraftstoresByFiltersAndPages(String name, String category, String region, String province, String city, int page, int size) {
+    public List<CraftstoreMinDto> searchCraftstoresByFiltersPaginationSorting(String name, String category, String region, String province, String city, int page, int size, String sortField, String sortDirection) {
 
         Specification<Craftstore> filters = Specification.where(null);
 
@@ -122,9 +144,9 @@ public class CraftstoreService {
         }
 
         // pageNumber parameter is zero-based
-        Pageable paging = PageRequest.of(page-1, size);
+        Pageable pagingSort = PageRequest.of(page-1, size, Sort.Direction.fromString(sortDirection), sortField);
 
-        Page<Craftstore> pageCraftstores = craftstoreRepository.findAll(filters, paging);
+        Page<Craftstore> pageCraftstores = craftstoreRepository.findAll(filters, pagingSort);
 
         List<Craftstore> craftstoreList= pageCraftstores.getContent();
 
@@ -235,15 +257,24 @@ public class CraftstoreService {
     }
 
     /**
-     * This method is used to get comments related to a craftstore given its id.
+     * This method is used to get comments related to a craftstore given its id, sorted in descending order by post date.
      * @param id the craftstore id
-     * @return the comments related to the craftstore with that id
+     * @return the comments related to the craftstore with that id, sorted in descending order by post date
      */
     public List<Comment> getCraftstoreCommentsById(int id) {
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
 
-        return craftstore.get().getCommentList();
+        //copy of the comment list
+        List<Comment> list = new ArrayList<>( craftstore.get().getCommentList().size() );
+        for ( Comment comment : craftstore.get().getCommentList() ) {
+            list.add( new Comment(comment.getId(),comment.getUserId(),comment.getUserName(),comment.getPostDate(),comment.getText()));
+        }
+
+        //list sorting
+        list.sort(Comparator.comparing(Comment::getPostDate).reversed());
+
+        return list;
     }
 
     /**

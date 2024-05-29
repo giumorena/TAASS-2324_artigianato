@@ -1,5 +1,6 @@
 import { sql } from '@vercel/postgres';
 import {
+  Comment,
   CustomerField,
   CustomersTableType,
   InvoiceForm,
@@ -10,23 +11,27 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
-//Da commentare
-export async function fetchFilteredPagedCraftstores(query: string) {
-  const res = await fetch(`http://localhost:8080/craftstore/searchCraftstoresPage?${query}`)
+// Fetch the sorted page with the search results based on the query string
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchFilteredSortedPagedCraftstores(query: string) {
+  const res = await fetch(`http://localhost:8080/craftstore/searchCraftstoresSortedPage?${query}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch filtered paged craftstores')
+    throw new Error('Failed to fetch filtered sorted paged craftstores')
   }
 
   return res.json()
 }
 
-//Da commentare
-export async function fetchCraftstoresPages(query: string) {
-      const res = await fetch(`http://localhost:8080/craftstore/countCraftstoresPages?${query}`)
+// Fetch the total number of pages with the search results based on the query string
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchNumberOfCraftstoresPages(query: string) {
+      const res = await fetch(`http://localhost:8080/craftstore/countCraftstoresPages?${query}`,{cache: 'no-store'})
       // The return value is *not* serialized
       // You can return Date, Map, Set, etc.
 
@@ -38,9 +43,11 @@ export async function fetchCraftstoresPages(query: string) {
       return res.json()
 }
 
-//Da commentare
+// Fetch all the information about a craftstore given its id
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreById(id: number) {
-  const res = await fetch(`http://localhost:8080/craftstore/getCraftstore/${id}`)
+  const res = await fetch(`http://localhost:8080/craftstore/getCraftstore/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -52,9 +59,11 @@ export async function fetchCraftstoreById(id: number) {
   return res.json()
 }
 
-//Da commentare
+// Fetch the general information about a craftstore given its id
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreInfoById(id: number) {
-  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreInfo/${id}`)
+  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreInfo/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -66,9 +75,11 @@ export async function fetchCraftstoreInfoById(id: number) {
   return res.json()
 }
 
-//Da commentare
+// Fetch the craftstore sampler given the craftstore id
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreProductsById(id: number) {
-  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreSampler/${id}`)
+  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreSampler/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -80,15 +91,70 @@ export async function fetchCraftstoreProductsById(id: number) {
   return res.json()
 }
 
-//Da commentare
+// Fetch comments related to a craftstore given its id
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreCommentsById(id: number) {
-  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreComments/${id}`)
+  const res = await fetch(`http://localhost:8080/craftstore/getCraftstoreComments/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch craftstore comments by id')
+  }
+
+  return res.json()
+}
+
+// Fetch comments posted by a user given its id
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchUserCommentsById(id: number) {
+  const res = await fetch(`http://localhost:8080/user/getUserComments/${id}`,{cache: 'no-store'})
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch user comments by id')
+  }
+
+  return res.json()
+}
+
+// Fetch all craftstores sorted by name
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchSortedCraftstores() {
+  const res = await fetch('http://localhost:8080/craftstore/getSortedCraftstores',{cache: 'no-store'})
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch sorted craftstores')
+  }
+
+  return res.json()
+}
+
+// Post a comment
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function postComment(comment: Comment) {
+  const res = await fetch('http://localhost:8080/comment/addComment',{
+    method: "POST",
+    cache : "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(comment),
+  })
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to post comment')
   }
 
   return res.json()

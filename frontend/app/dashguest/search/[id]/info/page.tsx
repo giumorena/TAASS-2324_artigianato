@@ -4,7 +4,7 @@ import { fetchCustomers } from '@/app/lib/data';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import {lusitana} from "@/app/ui/fonts";
-import CraftstoreInfo from "@/app/ui/dashguest/craftstore-info";
+import CraftstoreInfo from "@/app/ui/craftstores/craftstore-info";
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;

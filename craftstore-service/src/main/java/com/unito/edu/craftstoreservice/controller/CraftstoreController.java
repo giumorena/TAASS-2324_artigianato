@@ -31,6 +31,17 @@ public class CraftstoreController {
     }
 
     /**
+     * This API is used to get all craftstores (only MinDto data) sorted by craftstore name.
+     *
+     * @return a list with all craftstores (only MinDto data) sorted by craftstore name.
+     */
+    @GetMapping("/getSortedCraftstores")
+    public List<CraftstoreMinDto> getAllSortedCraftstore() {
+
+        return craftstoreService.getAllSortedCraftstores();
+    }
+
+    /**
      * This API is used to search craftstores based on filters.
      * @param name the craftstore name (optional)
      * @param category the craftstore category (optional)
@@ -58,18 +69,22 @@ public class CraftstoreController {
      * @param city the craftstore city (optional)
      * @param page the page index (one-based, default 1)
      * @param size the page size (default 3)
-     * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page
+     * @param sortField the name of the field in the entity object (not in the database table) used for sorting (default name)
+     * @param sortDirection the sort direction (default ASC)
+     * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page, sorted by the sortField
      */
-    @GetMapping("/searchCraftstoresPage")
-    public List<CraftstoreMinDto> searchCraftstoresByFiltersAndPages(@RequestParam(required = false) String name,
-                                                                     @RequestParam(required = false) String category,
-                                                                     @RequestParam (required = false) String region,
-                                                                     @RequestParam (required = false) String province,
-                                                                     @RequestParam (required = false) String city,
-                                                                     @RequestParam(defaultValue = "1") int page,
-                                                                     @RequestParam(defaultValue = "3") int size) {
+    @GetMapping("/searchCraftstoresSortedPage")
+    public List<CraftstoreMinDto> searchCraftstoresByFiltersPaginationSorting(@RequestParam (required = false) String name,
+                                                                              @RequestParam (required = false) String category,
+                                                                              @RequestParam (required = false) String region,
+                                                                              @RequestParam (required = false) String province,
+                                                                              @RequestParam (required = false) String city,
+                                                                              @RequestParam (defaultValue = "1") int page,
+                                                                              @RequestParam (defaultValue = "3") int size,
+                                                                              @RequestParam (defaultValue = "name") String sortField,
+                                                                              @RequestParam (defaultValue = "ASC") String sortDirection) {
 
-        return craftstoreService.searchCraftstoresByFiltersAndPages(name,category,region,province,city,page,size);
+        return craftstoreService.searchCraftstoresByFiltersPaginationSorting(name,category,region,province,city,page,size,sortField,sortDirection);
     }
 
     /**
@@ -81,16 +96,20 @@ public class CraftstoreController {
      * @param city the craftstore city (optional)
      * @param page the page index (one-based, default 1)
      * @param size the page size (default 3)
+     * @param sortField the name of the field in the entity object (not in the database table) used for sorting (default name)
+     * @param sortDirection the sort direction (default ASC)
      * @return the number of craftstores pages that match the filters.
      */
     @GetMapping("/countCraftstoresPages")
-    public int craftstoresPagesNumber(@RequestParam(required = false) String name,
-                                       @RequestParam(required = false) String category,
-                                       @RequestParam (required = false) String region,
-                                       @RequestParam (required = false) String province,
-                                       @RequestParam (required = false) String city,
-                                       @RequestParam(defaultValue = "1") int page,
-                                       @RequestParam(defaultValue = "3") int size) {
+    public int craftstoresPagesNumber(@RequestParam (required = false) String name,
+                                      @RequestParam (required = false) String category,
+                                      @RequestParam (required = false) String region,
+                                      @RequestParam (required = false) String province,
+                                      @RequestParam (required = false) String city,
+                                      @RequestParam (defaultValue = "1") int page,
+                                      @RequestParam (defaultValue = "3") int size,
+                                      @RequestParam (defaultValue = "name") String sortField,
+                                      @RequestParam (defaultValue = "ASC") String sortDirection) {
 
         return craftstoreService.craftstoresPagesNumber(name,category,region,province,city,page,size);
     }
@@ -129,9 +148,9 @@ public class CraftstoreController {
     }
 
     /**
-     * This API is used to get comments related to a craftstore given its id.
+     * This API is used to get comments related to a craftstore given its id, sorted in descending order by post date.
      * @param id the craftstore id
-     * @return the comments related to the craftstore with that id
+     * @return the comments related to the craftstore with that id, sorted in descending order by post date
      */
     @GetMapping("/getCraftstoreComments/{id}")
     public List<Comment> getCraftstoreCommentsById(@PathVariable int id) {

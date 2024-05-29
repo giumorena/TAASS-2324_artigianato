@@ -3,7 +3,7 @@ import Breadcrumbs from '@/app/ui/breadcrumbs';
 import { fetchCustomers } from '@/app/lib/data';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
-import CraftstoreProducts from "@/app/ui/dashguest/craftstore-products";
+import CraftstoreProducts from "@/app/ui/craftstores/craftstore-products";
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;
