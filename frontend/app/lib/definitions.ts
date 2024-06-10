@@ -3,6 +3,12 @@
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 
+export type OwnershipS = {
+  id: number;
+  craftstoreId: number;
+  craftstoreName: string;
+}
+
 export type Ownership = {
   id: number;
   craftsmanId: number;
@@ -55,7 +61,8 @@ export type UserComment = {
   text: string;
 }
 
-export type Comment = {
+// Comment with omitted fields
+export type CommentO = {
   //id: number;
   craftstoreId: number;
   craftstoreName: string;
@@ -65,6 +72,12 @@ export type Comment = {
   text: string;
 }
 
+// Product with omitted fields
+export type ProductO = {
+  //id: number;
+  description: string;
+  price: number;
+}
 
 export type User = {
   id: string;

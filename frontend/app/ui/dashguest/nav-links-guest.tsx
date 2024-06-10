@@ -14,7 +14,7 @@ const links = [
     { name: 'Search', href: '/dashguest/search', icon: MagnifyingGlassIcon },
 ];
 
-export default function NavLinks() {
+export default function NavLinksGuest() {
     const pathname = usePathname();
 
     return (

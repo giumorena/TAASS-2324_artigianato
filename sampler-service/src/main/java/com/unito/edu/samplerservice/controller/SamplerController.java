@@ -49,6 +49,17 @@ public class SamplerController {
     }
 
     /**
+     * This API is used to get a product given its id.
+     * @param id the product id
+     * @return the product with that id
+     */
+    @GetMapping("/getProduct/{id}")
+    public Product getProductById(@PathVariable int id) {
+
+        return samplerService.getProductById(id);
+    }
+
+    /**
      * This API is used to add a product to a sampler.
      * @param id the sampler id
      * @param product the product to be added

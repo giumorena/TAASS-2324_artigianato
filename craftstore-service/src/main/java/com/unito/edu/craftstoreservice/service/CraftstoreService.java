@@ -7,6 +7,7 @@ import com.unito.edu.craftstoreservice.model.dto.CommentMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreInfoDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
+import com.unito.edu.craftstoreservice.repository.CommentRepository;
 import com.unito.edu.craftstoreservice.repository.CraftstoreRepository;
 import com.unito.edu.craftstoreservice.service.specification.CraftstoreSpecification;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -30,6 +31,9 @@ public class CraftstoreService {
 
     @Autowired
     private CraftstoreRepository craftstoreRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -261,6 +265,12 @@ public class CraftstoreService {
      * @param id the craftstore id
      * @return the comments related to the craftstore with that id, sorted in descending order by post date
      */
+
+    public List<Comment> getCraftstoreCommentsById(int id) {
+
+        return commentRepository.findOrderedCommentsByCraftstoreId(id);
+    }
+    /*
     public List<Comment> getCraftstoreCommentsById(int id) {
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
@@ -276,6 +286,7 @@ public class CraftstoreService {
 
         return list;
     }
+    */
 
     /**
      * This method is used to save in the database a craftstore.

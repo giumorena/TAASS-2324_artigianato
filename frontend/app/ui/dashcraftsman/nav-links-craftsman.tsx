@@ -2,7 +2,7 @@
 
 import {
     HomeIcon,
-    ChatBubbleLeftEllipsisIcon,
+    BuildingStorefrontIcon,
 } from '@heroicons/react/24/outline';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -11,10 +11,10 @@ import clsx from 'clsx';
 // Depending on the size of the application, this would be stored in a database.
 const links = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Comments', href: '/dashuser/comments', icon: ChatBubbleLeftEllipsisIcon },
+    { name: 'Craftstores', href: '/dashcraftsman/craftstores', icon: BuildingStorefrontIcon },
 ];
 
-export default function NavLinksUser() {
+export default function NavLinksCraftsman() {
     const pathname = usePathname();
 
     return (

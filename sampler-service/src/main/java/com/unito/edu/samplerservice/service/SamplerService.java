@@ -50,6 +50,16 @@ public class SamplerService {
     }
 
     /**
+     * This method is used to get a product given its id.
+     * @param id the product id
+     * @return the product with that id
+     */
+    public Product getProductById(int id){
+
+        return productRepository.findById(id).orElse(null);
+    }
+
+    /**
      * This method is used to add a product to a sampler.
      * @param id the sampler id
      * @param product the product to be added

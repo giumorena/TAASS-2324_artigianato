@@ -1,6 +1,7 @@
 package com.unito.edu.craftsmanservice.service;
 
 import com.unito.edu.craftsmanservice.model.Craftsman;
+import com.unito.edu.craftsmanservice.model.Ownership;
 import com.unito.edu.craftsmanservice.repository.CraftsmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CraftsmanService {
@@ -26,13 +28,25 @@ public class CraftsmanService {
     }
 
     /**
-     * This method is used to get a craftsman given its id.
+     * This method is used to get a craftsman given his id.
      * @param id the craftsman id
      * @return the craftsman with that id
      */
     public Craftsman getCraftsmanById(int id) {
 
         return craftsmanRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * This method is used to get all craftstores owned by a craftsman given his id.
+     * @param id the craftsman id
+     * @return the craftstores owned by the craftsman with that id
+     */
+    public List<Ownership> getCraftstoresByCraftsmanId(int id) {
+
+        Optional<Craftsman> craftsman = craftsmanRepository.findById(id);
+
+        return craftsman.get().getCraftstoreList();
     }
 
     /**

@@ -71,7 +71,7 @@ export default function Form({ craftstores, userId, userName }:
                 >
                     Cancel
                 </Link>
-                <Button type="submit">Create Comment</Button>
+                <Button type="submit">Post Comment</Button>
             </div>
         </form>
     );

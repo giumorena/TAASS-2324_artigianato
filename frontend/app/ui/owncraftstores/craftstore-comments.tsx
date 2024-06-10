@@ -1,4 +1,4 @@
-import {ShowCraftstoreComments, ShowCraftstoreInfo, ShowCraftstoreProducts} from "@/app/ui/dashguest/buttons-guest";
+import {ShowCraftstoreComments, ShowCraftstoreProducts} from "@/app/ui/dashcraftsman/buttons-craftsman";
 import Comments from "@/app/ui/comments";
 
 export default async function CraftstoreComments({
@@ -12,9 +12,8 @@ export default async function CraftstoreComments({
             <div className="inline-block min-w-full align-middle">
                 <Comments id={id}/>
                 <div className="flex justify-center">
-                    <ShowCraftstoreInfo id={id} />
-                    <ShowCraftstoreProducts id={id} />
                     <ShowCraftstoreComments id={id} />
+                    <ShowCraftstoreProducts id={id} />
                 </div>
             </div>
         </div>

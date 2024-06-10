@@ -1,11 +1,11 @@
 'use server';
 
 import { z } from 'zod';
-import {postComment} from "@/app/lib/data";
+import {addProduct, updateProduct, deleteProduct, postComment} from "@/app/lib/data";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-const FormSchema = z.object({
+const FormSchemaComment = z.object({
     id: z.number(),
     craftstoreId: z.coerce.number(), // the value from the form is of type string not number
     craftstoreName: z.string().min(1),
@@ -15,7 +15,7 @@ const FormSchema = z.object({
     text: z.string().min(1).max(100),
 });
 
-const CreateComment = FormSchema.omit({ id: true, userId: true, userName: true, postDate: true });
+const CreateComment = FormSchemaComment.omit({ id: true, userId: true, userName: true, postDate: true });
 
 export async function createComment(userId: number, userName: string, separator: string, formData: FormData) {
 
@@ -59,4 +59,90 @@ export async function createComment(userId: number, userName: string, separator:
         console.log('Post Comment: crafstore is null');
     }
 
+}
+
+const FormSchemaProduct = z.object({
+    id: z.number(),
+    description: z.string().min(1),
+    price: z.coerce.number().nonnegative(), // the value from the form is of type string not number, if the field is empty the value will be set to 0 (not null because the primitive type float was used in the model)
+    /*price: z.preprocess(
+        (arg) => (arg === '' ? null : arg), //convert empty field to null
+        z.coerce.number().positive().nullable(),
+    ),*/
+});
+
+const CreateProduct = FormSchemaProduct.omit({ id: true });
+
+export async function createProduct(id: number, samplerId: number, formData: FormData) {
+
+    const validatedData = CreateProduct.safeParse({
+        description: formData.get('product'),
+        price: formData.get('price'),
+    });
+
+    if (validatedData.success) {
+        const product = {
+            description: validatedData.data.description,
+            price: validatedData.data.price,
+        }
+
+        console.log(product);
+
+        try {
+            await addProduct(samplerId,product);
+        } catch (error) {
+            console.log('Add product: failed to Add Product');
+        }
+
+        revalidatePath(`/dashcraftsman/craftstores/${id}/products`);
+        redirect(`/dashcraftsman/craftstores/${id}/products`);
+
+    } else {
+        console.log(validatedData.error.flatten().fieldErrors);
+    }
+
+}
+
+const UpdateProduct = FormSchemaProduct.omit({ id: true });
+
+export async function editProduct(id: number, productId: number, formData: FormData) {
+
+    const validatedData = UpdateProduct.safeParse({
+        description: formData.get('product'),
+        price: formData.get('price'),
+    });
+
+    if (validatedData.success) {
+        const product = {
+            description: validatedData.data.description,
+            price: validatedData.data.price,
+        }
+
+        console.log(product);
+
+        try {
+            await updateProduct(productId,product);
+        } catch (error) {
+            console.log('Update product: failed to Update Product');
+        }
+
+        revalidatePath(`/dashcraftsman/craftstores/${id}/products`);
+        redirect(`/dashcraftsman/craftstores/${id}/products`);
+
+    } else {
+        console.log(validatedData.error.flatten().fieldErrors);
+    }
+
+}
+
+export async function cancelProduct(id: number, productId: number) {
+    console.log(productId);
+
+    try {
+        await deleteProduct(productId);
+    } catch (error) {
+        console.log('Delete product: failed to Delete Product');
+    }
+
+    revalidatePath(`/dashcraftsman/craftstores/${id}/products`);
 }

@@ -27,7 +27,7 @@ public class UserController {
     }
 
     /**
-     * This API is used to get a user given its id.
+     * This API is used to get a user given his id.
      * @param id the user id
      * @return the user with that id
      */
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     /**
-     * This API is used to get comments posted by a user given its id, sorted in descending order by post date.
+     * This API is used to get comments posted by a user given his id, sorted in descending order by post date.
      * @param id the user id
      * @return comments posted by the user with that id, sorted in descending order by post date
      */

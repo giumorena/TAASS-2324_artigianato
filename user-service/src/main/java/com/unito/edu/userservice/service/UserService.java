@@ -2,6 +2,7 @@ package com.unito.edu.userservice.service;
 
 import com.unito.edu.userservice.model.Comment;
 import com.unito.edu.userservice.model.User;
+import com.unito.edu.userservice.repository.CommentRepository;
 import com.unito.edu.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     /**
      * This method is used to get all users.
      *
@@ -28,7 +32,7 @@ public class UserService {
     }
 
     /**
-     * This method is used to get a user given its id.
+     * This method is used to get a user given his id.
      * @param id the user id
      * @return the user with that id
      */
@@ -38,10 +42,15 @@ public class UserService {
     }
 
     /**
-     * This method is used to get comments posted by a user given its id, sorted in descending order by post date.
+     * This method is used to get comments posted by a user given his id, sorted in descending order by post date.
      * @param id the user id
      * @return comments posted by the user with that id, sorted in descending order by post date
      */
+    public List<Comment> getUserCommentsById(int id) {
+        return commentRepository.findOrderedCommentsByUserId(id);
+    }
+
+    /*
     public List<Comment> getUserCommentsById(int id) {
 
         Optional<User> user= userRepository.findById(id);
@@ -57,6 +66,7 @@ public class UserService {
 
         return list;
     }
+    */
 
     /**
      * This method is used to save in the database a user.

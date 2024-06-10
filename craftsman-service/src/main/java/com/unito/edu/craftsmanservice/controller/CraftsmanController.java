@@ -1,6 +1,7 @@
 package com.unito.edu.craftsmanservice.controller;
 
 import com.unito.edu.craftsmanservice.model.Craftsman;
+import com.unito.edu.craftsmanservice.model.Ownership;
 import com.unito.edu.craftsmanservice.service.CraftsmanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CraftsmanController {
     }
 
     /**
-     * This API is used to get a craftsman given its id.
+     * This API is used to get a craftsman given his id.
      * @param id the craftsman id
      * @return the craftsman with that id
      */
@@ -34,6 +35,17 @@ public class CraftsmanController {
     public Craftsman getCraftsmanById(@PathVariable int id) {
 
         return craftsmanService.getCraftsmanById(id);
+    }
+
+    /**
+     * This API is used to get all craftstores owned by a craftsman given his id.
+     * @param id the craftsman id
+     * @return the craftstores owned by the craftsman with that id
+     */
+    @GetMapping("/getCraftstores/{id}")
+    public List<Ownership> getCraftstoresByCraftsmanId(@PathVariable int id) {
+
+        return craftsmanService.getCraftstoresByCraftsmanId(id);
     }
 
     /**
