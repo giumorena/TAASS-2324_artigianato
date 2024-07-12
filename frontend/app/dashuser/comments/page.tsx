@@ -3,10 +3,19 @@ import UserComments from "@/app/ui/dashuser/user-comments";
 import { CreateComment } from '@/app/ui/dashuser/buttons-user';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
+import {auth} from "@/auth";
+import {fetchUserByEmail} from "@/app/lib/data";
+import LoggedInfo from "@/app/ui/logged-info";
 
 
 export default async function Page() {
-    const userId = 1; //user id from login
+
+    const session = await auth();
+    if (!session || !session.user || !session.user.dbId || session.user.category !== 'user') return null;
+
+    console.log('dashuser session user: ' + JSON.stringify(session.user));
+
+    const userId = session.user.dbId; //user id from login
 
     return (
         <div className="w-full">

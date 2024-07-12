@@ -4,6 +4,9 @@ import com.unito.edu.craftsmanservice.model.Craftsman;
 import com.unito.edu.craftsmanservice.model.Ownership;
 import com.unito.edu.craftsmanservice.repository.CraftsmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +38,23 @@ public class CraftsmanService {
     public Craftsman getCraftsmanById(int id) {
 
         return craftsmanRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * This method is used to get a craftsman given his email.
+     * @param email the craftsman's email
+     * @return the craftsman with that email
+     */
+    public ResponseEntity<?> getCraftsmanByEmail(String email) {
+
+        Optional<Craftsman> craftsman = craftsmanRepository.findByEmail(email);
+
+        if(craftsman.isPresent()){
+            return new ResponseEntity<>(craftsman, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("No craftsman found", HttpStatus.NOT_FOUND);
+        }
     }
 
     /**

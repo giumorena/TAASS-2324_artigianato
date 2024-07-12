@@ -1,10 +1,19 @@
 import {lusitana} from "@/app/ui/fonts";
 import CraftsmanStores from "@/app/ui/dashcraftsman/craftsman-stores";
+import {fetchCraftsmanByEmail} from "@/app/lib/data";
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
+import {auth} from "@/auth";
+import LoggedInfo from "@/app/ui/logged-info";
 
 export default async function Page() {
-    const craftsmanId = 1; //craftsman id from login
+
+    const session = await auth();
+    if (!session || !session.user || !session.user.dbId || session.user.category !== 'craftsman') return null;
+
+    console.log('dashcraftsman session user: ' + JSON.stringify(session.user));
+
+    const craftsmanId = session.user.dbId; //craftsman id from login
 
     return (
         <div className="w-full">

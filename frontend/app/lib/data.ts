@@ -8,17 +8,17 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   User,
-  Revenue,
+  Revenue, UserO,
 } from './definitions';
 import { formatCurrency } from './utils';
 
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+const gatewayURL = process.env.REACT_APP_API_BASE_URL;
 
 // Fetches the sorted page with the search results based on the query string
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchFilteredSortedPagedCraftstores(query: string) {
-  const res = await fetch(`${baseURL}/craftstore/searchCraftstoresSortedPage?${query}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/searchCraftstoresSortedPage?${query}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -34,7 +34,7 @@ export async function fetchFilteredSortedPagedCraftstores(query: string) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchNumberOfCraftstoresPages(query: string) {
-      const res = await fetch(`${baseURL}/craftstore/countCraftstoresPages?${query}`,{cache: 'no-store'})
+      const res = await fetch(`${gatewayURL}/craftstore/countCraftstoresPages?${query}`,{cache: 'no-store'})
       // The return value is *not* serialized
       // You can return Date, Map, Set, etc.
 
@@ -50,7 +50,7 @@ export async function fetchNumberOfCraftstoresPages(query: string) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreById(id: number) {
-  const res = await fetch(`${baseURL}/craftstore/getCraftstore/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/getCraftstore/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -66,7 +66,7 @@ export async function fetchCraftstoreById(id: number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreInfoById(id: number) {
-  const res = await fetch(`${baseURL}/craftstore/getCraftstoreInfo/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/getCraftstoreInfo/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -82,7 +82,7 @@ export async function fetchCraftstoreInfoById(id: number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreProductsById(id: number) {
-  const res = await fetch(`${baseURL}/craftstore/getCraftstoreSampler/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/getCraftstoreSampler/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -98,7 +98,7 @@ export async function fetchCraftstoreProductsById(id: number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchCraftstoreCommentsById(id: number) {
-  const res = await fetch(`${baseURL}/craftstore/getCraftstoreComments/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/getCraftstoreComments/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -114,7 +114,7 @@ export async function fetchCraftstoreCommentsById(id: number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchUserCommentsById(id: number) {
-  const res = await fetch(`${baseURL}/user/getUserComments/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/user/getUserComments/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -130,7 +130,7 @@ export async function fetchUserCommentsById(id: number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchSortedCraftstores() {
-  const res = await fetch(`${baseURL}/craftstore/getSortedCraftstores`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftstore/getSortedCraftstores`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -146,7 +146,7 @@ export async function fetchSortedCraftstores() {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchStoresByCraftsmanId(id:number) {
-  const res = await fetch(`${baseURL}/craftsman/getCraftstores/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/craftsman/getCraftstores/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -162,7 +162,7 @@ export async function fetchStoresByCraftsmanId(id:number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function postComment(comment: CommentO) {
-  const res = await fetch(`${baseURL}/comment/addComment`,{
+  const res = await fetch(`${gatewayURL}/comment/addComment`,{
     method: "POST",
     cache : "no-store",
     headers: {
@@ -183,7 +183,7 @@ export async function postComment(comment: CommentO) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function addProduct(samplerId: number, product: ProductO) {
-  const res = await fetch(`${baseURL}/sampler/addProduct/${samplerId}`,{
+  const res = await fetch(`${gatewayURL}/sampler/addProduct/${samplerId}`,{
     method: "POST",
     cache : "no-store",
     headers: {
@@ -204,7 +204,7 @@ export async function addProduct(samplerId: number, product: ProductO) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function fetchProductById(id:number) {
-  const res = await fetch(`${baseURL}/sampler/getProduct/${id}`,{cache: 'no-store'})
+  const res = await fetch(`${gatewayURL}/sampler/getProduct/${id}`,{cache: 'no-store'})
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -220,7 +220,7 @@ export async function fetchProductById(id:number) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function updateProduct(productId: number, product: ProductO) {
-  const res = await fetch(`${baseURL}/sampler/updateProduct/${productId}`,{
+  const res = await fetch(`${gatewayURL}/sampler/updateProduct/${productId}`,{
     method: "PUT",
     cache : "no-store",
     headers: {
@@ -241,7 +241,7 @@ export async function updateProduct(productId: number, product: ProductO) {
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
 export async function deleteProduct(productId: number) {
-  const res = await fetch(`${baseURL}/sampler/deleteProduct/${productId}`,{
+  const res = await fetch(`${gatewayURL}/sampler/deleteProduct/${productId}`,{
     method: "DELETE",
     cache : "no-store",
   })
@@ -252,6 +252,67 @@ export async function deleteProduct(productId: number) {
   }
 
   return res //the response is empty, so it doesn't have to be parsed into json
+}
+
+// Fetches a craftsman given his email
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchCraftsmanByEmail(email:string) {
+  const res = await fetch(`${gatewayURL}/craftsman/getCraftsmanByEmail/${email}`,{cache: 'no-store'})
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch craftsman by email')
+  }
+
+  return res.json()
+}
+
+// Fetches a user given his email
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function fetchUserByEmail(email:string) {
+  const res = await fetch(`${gatewayURL}/user/getUserByEmail/${email}`,{cache: 'no-store'})
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (res.statusText === 'OK'){
+    return res.json();
+  }
+  else if(res.statusText === 'Not Found'){
+    const errorResponse = {
+      status: res.statusText,
+    }
+    return errorResponse;
+  }
+  else{
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Error fetching user by email')
+  }
+
+}
+
+// Adds to the user database a user who has just registered
+// Add noStore() here to prevent the response from being cached.
+// This is equivalent to in fetch(..., {cache: 'no-store'}).
+export async function addUser(user: UserO) {
+  const res = await fetch(`${gatewayURL}/user/addUser`,{
+    method: "POST",
+    cache : "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to add user')
+  }
+
+  return res.json()
 }
 
 export async function fetchRevenue() {

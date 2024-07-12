@@ -21,8 +21,11 @@ public class Craftsman {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "craft")
-    private String craft;
+    /*
+     * Used to identify a craftsman after he has logged in
+     */
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     /* Unidirectional One-To-Many relationship.
      *  A craftsman may have many ownerships (and then craftstores),

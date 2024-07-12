@@ -4,6 +4,7 @@ import com.unito.edu.userservice.model.Comment;
 import com.unito.edu.userservice.model.User;
 import com.unito.edu.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,17 @@ public class UserController {
     public User getUserById(@PathVariable int id) {
 
         return userService.getUserById(id);
+    }
+
+    /**
+     * This API is used to get a user given his email.
+     * @param email the user's email
+     * @return the user with that email
+     */
+    @GetMapping("/getUserByEmail/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
+
+        return userService.getUserByEmail(email);
     }
 
     /**

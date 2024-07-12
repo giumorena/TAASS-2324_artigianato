@@ -21,6 +21,12 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
+    /*
+     * Used to identify a user after he has logged in
+     */
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
     /* Unidirectional One-To-Many relationship.
      *  A user can post multiple comments,
      *  while a comment may have been posted by only one user.

@@ -4,6 +4,7 @@ import com.unito.edu.craftsmanservice.model.Craftsman;
 import com.unito.edu.craftsmanservice.model.Ownership;
 import com.unito.edu.craftsmanservice.service.CraftsmanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,17 @@ public class CraftsmanController {
     public Craftsman getCraftsmanById(@PathVariable int id) {
 
         return craftsmanService.getCraftsmanById(id);
+    }
+
+    /**
+     * This API is used to get a craftsman given his email.
+     * @param email the craftsman's email
+     * @return the craftsman with that email
+     */
+    @GetMapping("/getCraftsmanByEmail/{email}")
+    public ResponseEntity<?> getCraftsmanByEmail(@PathVariable String email) {
+
+        return craftsmanService.getCraftsmanByEmail(email);
     }
 
     /**

@@ -1,9 +1,14 @@
 import Form from '@/app/ui/craftsmen/create-form';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
+import {auth} from "@/auth";
+import LoggedInfo from "@/app/ui/logged-info";
 
 export default async function Page({ params }: { params: { id: number, samplerId: number } }) {
     const id = params.id;
     const samplerId = params.samplerId;
+
+    const session = await auth();
+    if (!session || !session.user || session.user.category !== 'craftsman') return null;
 
     return (
         <main>

@@ -5,6 +5,8 @@ import com.unito.edu.userservice.model.User;
 import com.unito.edu.userservice.repository.CommentRepository;
 import com.unito.edu.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,6 +41,23 @@ public class UserService {
     public User getUserById(int id) {
 
         return userRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * This method is used to get a user given his email.
+     * @param email the user's email
+     * @return the user with that email
+     */
+    public ResponseEntity<?> getUserByEmail(String email) {
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if(user.isPresent()){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("No user found", HttpStatus.NOT_FOUND);
+        }
     }
 
     /**

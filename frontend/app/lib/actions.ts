@@ -4,6 +4,7 @@ import { z } from 'zod';
 import {addProduct, updateProduct, deleteProduct, postComment} from "@/app/lib/data";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import {auth} from "@/auth";
 
 const FormSchemaComment = z.object({
     id: z.number(),
@@ -18,6 +19,11 @@ const FormSchemaComment = z.object({
 const CreateComment = FormSchemaComment.omit({ id: true, userId: true, userName: true, postDate: true });
 
 export async function createComment(userId: number, userName: string, separator: string, formData: FormData) {
+
+    const session = await auth();
+    if(!session || !session.user || session.user.category !== 'user'){
+        throw new Error('Unauthorized access: only users can create comments.')
+    }
 
     const craftstore=formData.get('craftstore');
 
@@ -75,6 +81,11 @@ const CreateProduct = FormSchemaProduct.omit({ id: true });
 
 export async function createProduct(id: number, samplerId: number, formData: FormData) {
 
+    const session = await auth();
+    if(!session || !session.user || session.user.category !== 'craftsman'){
+        throw new Error('Unauthorized access: only craftsmen can create product.')
+    }
+
     const validatedData = CreateProduct.safeParse({
         description: formData.get('product'),
         price: formData.get('price'),
@@ -107,6 +118,11 @@ const UpdateProduct = FormSchemaProduct.omit({ id: true });
 
 export async function editProduct(id: number, productId: number, formData: FormData) {
 
+    const session = await auth();
+    if(!session || !session.user || session.user.category !== 'craftsman'){
+        throw new Error('Unauthorized access: only craftsmen can edit product.')
+    }
+
     const validatedData = UpdateProduct.safeParse({
         description: formData.get('product'),
         price: formData.get('price'),
@@ -136,6 +152,12 @@ export async function editProduct(id: number, productId: number, formData: FormD
 }
 
 export async function cancelProduct(id: number, productId: number) {
+
+    const session = await auth();
+    if(!session || !session.user || session.user.category !== 'craftsman'){
+        throw new Error('Unauthorized access: only craftsmen can delete product.')
+    }
+
     console.log(productId);
 
     try {

@@ -79,6 +79,14 @@ export type ProductO = {
   price: number;
 }
 
+// User with omitted fields
+export type UserO = {
+  //id: number;
+  name: string;
+  email: string;
+  commentList: UserComment[];
+};
+
 export type User = {
   id: string;
   name: string;
