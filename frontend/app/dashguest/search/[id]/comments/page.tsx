@@ -2,11 +2,6 @@ import Breadcrumbs from '@/app/ui/breadcrumbs';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import CraftstoreComments from "@/app/ui/craftstores/craftstore-comments";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Searched Store Comments',
-};
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;

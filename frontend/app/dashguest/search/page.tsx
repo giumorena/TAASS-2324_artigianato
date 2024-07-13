@@ -5,11 +5,6 @@ import Skeleton from "@/app/ui/skeletons";
 import { Suspense } from 'react';
 import {fetchNumberOfCraftstoresPages} from "@/app/lib/data";
 import Pagination from "@/app/ui/pagination";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Search Store',
-};
 
 export default async function Page({
                                        searchParams,

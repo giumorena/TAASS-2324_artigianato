@@ -1,11 +1,7 @@
 import Form from '@/app/ui/craftsmen/create-form';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
 import {auth} from "@/auth";
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Create Product',
-};
+import LoggedInfo from "@/app/ui/logged-info";
 
 export default async function Page({ params }: { params: { id: number, samplerId: number } }) {
     const id = params.id;
