@@ -4,8 +4,11 @@ import { CreateComment } from '@/app/ui/dashuser/buttons-user';
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import {auth} from "@/auth";
-import {fetchUserByEmail} from "@/app/lib/data";
-import LoggedInfo from "@/app/ui/logged-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'User Comments',
+};
 
 
 export default async function Page() {

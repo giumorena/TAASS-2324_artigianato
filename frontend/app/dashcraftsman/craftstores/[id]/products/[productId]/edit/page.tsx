@@ -2,7 +2,11 @@ import Form from '@/app/ui/craftsmen/edit-form';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
 import {fetchProductById} from "@/app/lib/data";
 import {auth} from "@/auth";
-import LoggedInfo from "@/app/ui/logged-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Edit Product',
+};
 
 export default async function Page({ params }: { params: { id: number, productId: number } }) {
     const id = params.id;

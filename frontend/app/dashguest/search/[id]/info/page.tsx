@@ -5,6 +5,11 @@ import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import {lusitana} from "@/app/ui/fonts";
 import CraftstoreInfo from "@/app/ui/craftstores/craftstore-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Searched Store Info',
+};
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;

@@ -3,7 +3,11 @@ import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import CraftstoreComments from "@/app/ui/owncraftstores/craftstore-comments";
 import {auth} from "@/auth";
-import LoggedInfo from "@/app/ui/logged-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Store Comments',
+};
 
 export default async function Page({ params }: { params: { id: number } }) {
     const id = params.id;
