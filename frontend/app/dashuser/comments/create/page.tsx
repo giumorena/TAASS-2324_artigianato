@@ -1,8 +1,12 @@
 import Form from '@/app/ui/users/create-form';
 import Breadcrumbs from '@/app/ui/breadcrumbs';
-import {fetchSortedCraftstores, fetchUserByEmail} from '@/app/lib/data';
+import {fetchSortedCraftstores} from '@/app/lib/data';
 import {auth} from "@/auth";
-import LoggedInfo from "@/app/ui/logged-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Create Comment',
+};
 
 export default async function Page() {
 

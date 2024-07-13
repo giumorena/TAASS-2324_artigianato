@@ -1,10 +1,13 @@
 import {lusitana} from "@/app/ui/fonts";
 import CraftsmanStores from "@/app/ui/dashcraftsman/craftsman-stores";
-import {fetchCraftsmanByEmail} from "@/app/lib/data";
 import {Suspense} from "react";
 import Skeleton from "@/app/ui/skeletons";
 import {auth} from "@/auth";
-import LoggedInfo from "@/app/ui/logged-info";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Craftsman Stores',
+};
 
 export default async function Page() {
 
