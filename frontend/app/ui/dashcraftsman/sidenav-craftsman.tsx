@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import NavLinksCraftsman from '@/app/ui/dashcraftsman/nav-links-craftsman';
 import CraftLogo from '@/app/ui/craft-logo';
 import {PowerIcon} from "@heroicons/react/24/outline";

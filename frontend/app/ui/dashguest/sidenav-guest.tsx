@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import NavLinksGuest from '@/app/ui/dashguest/nav-links-guest';
 import CraftLogo from '@/app/ui/craft-logo';
 
