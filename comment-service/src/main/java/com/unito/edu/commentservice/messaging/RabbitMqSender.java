@@ -34,9 +34,10 @@ public class RabbitMqSender {
 
         try {
             rabbitTemplate.convertAndSend(exchange, routingKey, comment);
-            System.out.println("Comment microservice sent: " + comment);
+            System.out.println("Comment microservice sent comment: " + comment);
         }
         catch (Exception e){
+            System.out.println("Comment microservice NOT SENT comment: " + comment);
             e.printStackTrace();
         }
     }

@@ -22,7 +22,7 @@ public class CraftsmanController {
      * @return a list of all craftsmen.
      */
     @GetMapping("/getCraftsmen")
-    public List<Craftsman> getAllCraftsmen() {
+    public ResponseEntity<?> getAllCraftsmen() {
 
         return craftsmanService.getAllCraftsmen();
     }
@@ -33,7 +33,7 @@ public class CraftsmanController {
      * @return the craftsman with that id
      */
     @GetMapping("/getCraftsman/{id}")
-    public Craftsman getCraftsmanById(@PathVariable int id) {
+    public ResponseEntity<?> getCraftsmanById(@PathVariable int id) {
 
         return craftsmanService.getCraftsmanById(id);
     }
@@ -55,7 +55,7 @@ public class CraftsmanController {
      * @return the craftstores owned by the craftsman with that id
      */
     @GetMapping("/getCraftstores/{id}")
-    public List<Ownership> getCraftstoresByCraftsmanId(@PathVariable int id) {
+    public ResponseEntity<?> getCraftstoresByCraftsmanId(@PathVariable int id) {
 
         return craftsmanService.getCraftstoresByCraftsmanId(id);
     }
@@ -66,7 +66,7 @@ public class CraftsmanController {
      * @return the saved craftsman.
      */
     @PostMapping(value = "/addCraftsman")
-    public Craftsman addCraftsman(@RequestBody Craftsman craftsman){
+    public ResponseEntity<?> addCraftsman(@RequestBody Craftsman craftsman){
 
         return craftsmanService.addCraftsman(craftsman);
     }

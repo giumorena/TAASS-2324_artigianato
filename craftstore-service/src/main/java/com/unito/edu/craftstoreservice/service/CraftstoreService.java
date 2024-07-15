@@ -14,6 +14,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.data.domain.Page;
@@ -43,9 +45,16 @@ public class CraftstoreService {
      *
      * @return a list of all craftstores.
      */
-    public List<Craftstore> getAllCraftstores() {
+    public ResponseEntity<?> getAllCraftstores() {
 
-        return craftstoreRepository.findAll();
+        List<Craftstore> craftstores = craftstoreRepository.findAll();
+
+        if(craftstores.size()>0){
+            return new ResponseEntity<>(craftstores, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(craftstores, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -53,7 +62,7 @@ public class CraftstoreService {
      *
      * @return a list with all craftstores (only MinDto data) sorted by craftstore name.
      */
-    public List<CraftstoreMinDto> getAllSortedCraftstores() {
+    public ResponseEntity<?> getAllSortedCraftstores() {
 
         List<Craftstore> craftstoreList= craftstoreRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 
@@ -62,7 +71,12 @@ public class CraftstoreService {
             list.add(new CraftstoreMinDto(craftstore.getId(),craftstore.getName(),craftstore.getCategory(),craftstore.getDescription(),craftstore.getOwnerList()));
         }
 
-        return list;
+        if(list.size()>0){
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -74,7 +88,7 @@ public class CraftstoreService {
      * @param city the craftstore city (optional)
      * @return a list of all craftstores (with only the MinDTO data) that match the filters
      */
-    public List<CraftstoreMinDto> searchCraftstoresByFilters(String name, String category, String region, String province, String city) {
+    public ResponseEntity<?> searchCraftstoresByFilters(String name, String category, String region, String province, String city) {
 
         Specification<Craftstore> filters = Specification.where(null);
 
@@ -107,7 +121,12 @@ public class CraftstoreService {
                     craftstore.getCategory(), craftstore.getDescription(), craftstore.getOwnerList()) );
         }
 
-        return list;
+        if(list.size()>0){
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -123,7 +142,7 @@ public class CraftstoreService {
      * @param sortDirection the sort direction (default ASC)
      * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page, sorted by the sortField
      */
-    public List<CraftstoreMinDto> searchCraftstoresByFiltersPaginationSorting(String name, String category, String region, String province, String city, int page, int size, String sortField, String sortDirection) {
+    public ResponseEntity<?> searchCraftstoresByFiltersPaginationSorting(String name, String category, String region, String province, String city, int page, int size, String sortField, String sortDirection) {
 
         Specification<Craftstore> filters = Specification.where(null);
 
@@ -161,7 +180,12 @@ public class CraftstoreService {
                     craftstore.getCategory(), craftstore.getDescription(), craftstore.getOwnerList()) );
         }
 
-        return list;
+        if(list.size()>0){
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(list, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -175,7 +199,7 @@ public class CraftstoreService {
      * @param size the page size (default 3)
      * @return the number of craftstores pages that match the filters.
      */
-    public int craftstoresPagesNumber(String name, String category, String region, String province, String city, int page, int size) {
+    public ResponseEntity<?> craftstoresPagesNumber(String name, String category, String region, String province, String city, int page, int size) {
 
         Specification<Craftstore> filters = Specification.where(null);
 
@@ -204,7 +228,7 @@ public class CraftstoreService {
 
         Page<Craftstore> pageCraftstores = craftstoreRepository.findAll(filters, paging);
 
-        return pageCraftstores.getTotalPages();
+        return new ResponseEntity<>(pageCraftstores.getTotalPages(),HttpStatus.OK);
     }
 
 
@@ -213,19 +237,32 @@ public class CraftstoreService {
      * @param id the craftstore id
      * @return the craftstore (with all the MaxDTO data) with that id
      */
-    public CraftstoreMaxDto getCraftstoreById(int id) {
+    public ResponseEntity<?> getCraftstoreById(int id) {
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
 
-        // Call to sampler-microservice to retrieve the craftstore sampler, given its id
-        Sampler sampler = restTemplate.getForObject("http://SAMPLER-SERVICE/sampler/getSampler/" + craftstore.get().getSamplerId(),Sampler.class);
+        if(craftstore.isPresent()) {
+            // Call to sampler-microservice to retrieve the craftstore sampler, given its id
+            ResponseEntity<Sampler> response = restTemplate.getForEntity("http://SAMPLER-SERVICE/sampler/getSampler/" + craftstore.get().getSamplerId(), Sampler.class);
 
-        // Mapping to CraftstoreMaxDto Object
-        CraftstoreMaxDto craftstoreMaxDto = new CraftstoreMaxDto(craftstore.get().getId(), craftstore.get().getName(),
-                craftstore.get().getCategory(),craftstore.get().getDescription(),sampler,craftstore.get().getOwnerList(),
-                craftstore.get().getContactList(),craftstore.get().getAddressList(),craftstore.get().getCommentList());
+            if(response.getStatusCode() == HttpStatus.OK) {
+                Sampler sampler = response.getBody();
 
-        return craftstoreMaxDto;
+                // Mapping to CraftstoreMaxDto Object
+                CraftstoreMaxDto craftstoreMaxDto = new CraftstoreMaxDto(craftstore.get().getId(), craftstore.get().getName(),
+                        craftstore.get().getCategory(), craftstore.get().getDescription(), sampler, craftstore.get().getOwnerList(),
+                        craftstore.get().getContactList(), craftstore.get().getAddressList(), craftstore.get().getCommentList());
+
+                return new ResponseEntity<>(craftstoreMaxDto, HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY); //referred to sampler
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     /**
@@ -233,16 +270,22 @@ public class CraftstoreService {
      * @param id the craftstore id
      * @return the information (with only the InfoDTO data) about craftstore with that id
      */
-    public CraftstoreInfoDto getCraftstoreInfoById(int id) {
+    public ResponseEntity<?> getCraftstoreInfoById(int id) {
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
 
-        // Mapping to CraftstoreInfoDto Object
-        CraftstoreInfoDto craftstoreInfoDto = new CraftstoreInfoDto(craftstore.get().getId(), craftstore.get().getName(),
-                craftstore.get().getCategory(),craftstore.get().getDescription(),craftstore.get().getOwnerList(),
-                craftstore.get().getContactList(),craftstore.get().getAddressList());
+        if(craftstore.isPresent()) {
 
-        return craftstoreInfoDto;
+            // Mapping to CraftstoreInfoDto Object
+            CraftstoreInfoDto craftstoreInfoDto = new CraftstoreInfoDto(craftstore.get().getId(), craftstore.get().getName(),
+                    craftstore.get().getCategory(), craftstore.get().getDescription(), craftstore.get().getOwnerList(),
+                    craftstore.get().getContactList(), craftstore.get().getAddressList());
+
+            return new ResponseEntity<>(craftstoreInfoDto,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -250,14 +293,26 @@ public class CraftstoreService {
      * @param id the craftstore id
      * @return the craftstore's sampler
      */
-    public Sampler getCraftstoreSamplerById(int id) {
+    public ResponseEntity<?> getCraftstoreSamplerById(int id) {
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
 
-        // Call to sampler-microservice to retrieve the craftstore sampler, given its id
-        Sampler sampler = restTemplate.getForObject("http://SAMPLER-SERVICE/sampler/getSampler/" + craftstore.get().getSamplerId(),Sampler.class);
+        if(craftstore.isPresent()) {
 
-        return sampler;
+            // Call to sampler-microservice to retrieve the craftstore sampler, given its id
+            ResponseEntity<Sampler> response = restTemplate.getForEntity("http://SAMPLER-SERVICE/sampler/getSampler/" + craftstore.get().getSamplerId(), Sampler.class);
+
+            if(response.getStatusCode() == HttpStatus.OK){
+                Sampler sampler = response.getBody();
+                return new ResponseEntity<>(sampler,HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY); //referred to sampler
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -266,9 +321,21 @@ public class CraftstoreService {
      * @return the comments related to the craftstore with that id, sorted in descending order by post date
      */
 
-    public List<Comment> getCraftstoreCommentsById(int id) {
+    public ResponseEntity<?> getCraftstoreCommentsById(int id) {
 
-        return commentRepository.findOrderedCommentsByCraftstoreId(id);
+        Optional<Craftstore> craftstore = craftstoreRepository.findById(id);
+
+        if(craftstore.isPresent()) {
+
+            List<Comment> comments = commentRepository.findOrderedCommentsByCraftstoreId(id);
+
+            if (comments.size() > 0) {
+                return new ResponseEntity<>(comments, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(comments, HttpStatus.NOT_FOUND); //referred to comments
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //referred to craftstore id
     }
     /*
     public List<Comment> getCraftstoreCommentsById(int id) {
@@ -293,9 +360,14 @@ public class CraftstoreService {
      * @param craftstore the craftstore to be saved
      * @return the saved craftstore
      */
-    public Craftstore addCraftstore(Craftstore craftstore){
+    public ResponseEntity<?> addCraftstore(Craftstore craftstore){
 
-        return craftstoreRepository.save(craftstore);
+        try{
+            return new ResponseEntity<>(craftstoreRepository.save(craftstore), HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     /**
@@ -304,11 +376,21 @@ public class CraftstoreService {
      * @param comment the comment to be added
      * @return the updated craftstore
      */
-    public Craftstore addComment(int id, Comment comment){
+    public ResponseEntity<?> addComment(int id, Comment comment){
 
         Optional<Craftstore> craftstore= craftstoreRepository.findById(id);
-        craftstore.get().getCommentList().add(comment);
 
-        return craftstoreRepository.save(craftstore.get());
+        if(craftstore.isPresent()) {
+            craftstore.get().getCommentList().add(comment);
+            try {
+                return new ResponseEntity<>(craftstoreRepository.save(craftstore.get()),HttpStatus.OK);
+            }
+            catch(Exception e){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -28,9 +28,16 @@ public class UserService {
      *
      * @return a list of all users.
      */
-    public List<User> getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
 
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        if(users.size()>0){
+           return new ResponseEntity<>(users,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(users,HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -38,9 +45,16 @@ public class UserService {
      * @param id the user id
      * @return the user with that id
      */
-    public User getUserById(int id) {
+    public ResponseEntity<?> getUserById(int id) {
 
-        return userRepository.findById(id).orElse(null);
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isPresent()){
+            return new ResponseEntity<>(user,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -56,7 +70,7 @@ public class UserService {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>("No user found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -65,8 +79,22 @@ public class UserService {
      * @param id the user id
      * @return comments posted by the user with that id, sorted in descending order by post date
      */
-    public List<Comment> getUserCommentsById(int id) {
-        return commentRepository.findOrderedCommentsByUserId(id);
+    public ResponseEntity<?> getUserCommentsById(int id) {
+
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isPresent()) {
+
+            List<Comment> comments = commentRepository.findOrderedCommentsByUserId(id);
+
+            if (comments.size() > 0) {
+                return new ResponseEntity<>(comments, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(comments, HttpStatus.NOT_FOUND); //referred to comments
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //referred to user id
+
     }
 
     /*
@@ -92,9 +120,14 @@ public class UserService {
      * @param user the user to be saved
      * @return the saved user.
      */
-    public User addUser(User user){
+    public ResponseEntity<?> addUser(User user){
 
-        return userRepository.save(user);
+        try {
+            return new ResponseEntity<>(userRepository.save(user),HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -103,11 +136,21 @@ public class UserService {
      * @param comment the comment to be added
      * @return the updated user
      */
-    public User addComment(int id, Comment comment){
+    public ResponseEntity<?> addComment(int id, Comment comment){
 
         Optional<User> user= userRepository.findById(id);
-        user.get().getCommentList().add(comment);
 
-        return userRepository.save(user.get());
+        if(user.isPresent()) {
+            user.get().getCommentList().add(comment);
+            try {
+                return new ResponseEntity<>(userRepository.save(user.get()),HttpStatus.OK);
+            }
+            catch(Exception e){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

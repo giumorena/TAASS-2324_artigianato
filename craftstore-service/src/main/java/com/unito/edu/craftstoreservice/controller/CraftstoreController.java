@@ -8,6 +8,7 @@ import com.unito.edu.craftstoreservice.model.dto.CraftstoreMaxDto;
 import com.unito.edu.craftstoreservice.model.dto.CraftstoreMinDto;
 import com.unito.edu.craftstoreservice.service.CraftstoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class CraftstoreController {
      * @return a list of all craftstores.
      */
     @GetMapping("/getCraftstores")
-    public List<Craftstore> getAllCraftstores() {
+    public ResponseEntity<?> getAllCraftstores() {
 
         return craftstoreService.getAllCraftstores();
     }
@@ -36,7 +37,7 @@ public class CraftstoreController {
      * @return a list with all craftstores (only MinDto data) sorted by craftstore name.
      */
     @GetMapping("/getSortedCraftstores")
-    public List<CraftstoreMinDto> getAllSortedCraftstore() {
+    public ResponseEntity<?> getAllSortedCraftstore() {
 
         return craftstoreService.getAllSortedCraftstores();
     }
@@ -51,7 +52,7 @@ public class CraftstoreController {
      * @return a list of all craftstores (with only the MinDTO data) that match the filters
      */
     @GetMapping("/searchCraftstores")
-    public List<CraftstoreMinDto> searchCraftstoresByFilters(@RequestParam(required = false) String name,
+    public ResponseEntity<?> searchCraftstoresByFilters(@RequestParam(required = false) String name,
                                                              @RequestParam(required = false) String category,
                                                              @RequestParam (required = false) String region,
                                                              @RequestParam (required = false) String province,
@@ -74,7 +75,7 @@ public class CraftstoreController {
      * @return a list of craftstores (with only the MinDTO data) that match the filters and belong to the page, sorted by the sortField
      */
     @GetMapping("/searchCraftstoresSortedPage")
-    public List<CraftstoreMinDto> searchCraftstoresByFiltersPaginationSorting(@RequestParam (required = false) String name,
+    public ResponseEntity<?> searchCraftstoresByFiltersPaginationSorting(@RequestParam (required = false) String name,
                                                                               @RequestParam (required = false) String category,
                                                                               @RequestParam (required = false) String region,
                                                                               @RequestParam (required = false) String province,
@@ -101,7 +102,7 @@ public class CraftstoreController {
      * @return the number of craftstores pages that match the filters.
      */
     @GetMapping("/countCraftstoresPages")
-    public int craftstoresPagesNumber(@RequestParam (required = false) String name,
+    public ResponseEntity<?> craftstoresPagesNumber(@RequestParam (required = false) String name,
                                       @RequestParam (required = false) String category,
                                       @RequestParam (required = false) String region,
                                       @RequestParam (required = false) String province,
@@ -120,7 +121,7 @@ public class CraftstoreController {
      * @return the craftstore (with all the MaxDTO data) with that id
      */
     @GetMapping("/getCraftstore/{id}")
-    public CraftstoreMaxDto getCraftstoreById(@PathVariable int id) {
+    public ResponseEntity<?> getCraftstoreById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreById(id);
     }
@@ -131,7 +132,7 @@ public class CraftstoreController {
      * @return the information (with only the InfoDTO data) about craftstore with that id
      */
     @GetMapping("/getCraftstoreInfo/{id}")
-    public CraftstoreInfoDto getCraftstoreInfoById(@PathVariable int id) {
+    public ResponseEntity<?> getCraftstoreInfoById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreInfoById(id);
     }
@@ -142,7 +143,7 @@ public class CraftstoreController {
      * @return the craftstore's sampler
      */
     @GetMapping("/getCraftstoreSampler/{id}")
-    public Sampler getCraftstoreSamplerById(@PathVariable int id) {
+    public ResponseEntity<?> getCraftstoreSamplerById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreSamplerById(id);
     }
@@ -153,7 +154,7 @@ public class CraftstoreController {
      * @return the comments related to the craftstore with that id, sorted in descending order by post date
      */
     @GetMapping("/getCraftstoreComments/{id}")
-    public List<Comment> getCraftstoreCommentsById(@PathVariable int id) {
+    public ResponseEntity<?> getCraftstoreCommentsById(@PathVariable int id) {
 
         return craftstoreService.getCraftstoreCommentsById(id);
     }
@@ -164,7 +165,7 @@ public class CraftstoreController {
      * @return the saved craftstore
      */
     @PostMapping(value = "/addCraftstore")
-    public Craftstore addCraftstore(@RequestBody Craftstore craftstore){
+    public ResponseEntity<?> addCraftstore(@RequestBody Craftstore craftstore){
 
         return craftstoreService.addCraftstore(craftstore);
     }

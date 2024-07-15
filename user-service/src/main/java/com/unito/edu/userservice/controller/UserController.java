@@ -22,7 +22,7 @@ public class UserController {
      * @return a list of all users.
      */
     @GetMapping("/getUsers")
-    public List<User> getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
 
         return userService.getAllUsers();
     }
@@ -33,7 +33,7 @@ public class UserController {
      * @return the user with that id
      */
     @GetMapping("/getUser/{id}")
-    public User getUserById(@PathVariable int id) {
+    public ResponseEntity<?> getUserById(@PathVariable int id) {
 
         return userService.getUserById(id);
     }
@@ -55,7 +55,7 @@ public class UserController {
      * @return comments posted by the user with that id, sorted in descending order by post date
      */
     @GetMapping("/getUserComments/{id}")
-    public List<Comment> getUserCommentsById(@PathVariable int id) {
+    public ResponseEntity<?> getUserCommentsById(@PathVariable int id) {
 
         return userService.getUserCommentsById(id);
     }
@@ -66,7 +66,7 @@ public class UserController {
      * @return the saved user.
      */
     @PostMapping(value = "/addUser")
-    public User addUser(@RequestBody User user){
+    public ResponseEntity<?> addUser(@RequestBody User user){
 
         return userService.addUser(user);
     }

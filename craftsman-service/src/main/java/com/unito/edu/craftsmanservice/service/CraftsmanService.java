@@ -25,9 +25,16 @@ public class CraftsmanService {
      *
      * @return a list of all craftsmen.
      */
-    public List<Craftsman> getAllCraftsmen() {
+    public ResponseEntity<?> getAllCraftsmen() {
 
-        return craftsmanRepository.findAll();
+        List<Craftsman> craftsmen = craftsmanRepository.findAll();
+
+        if(craftsmen.size()>0){
+            return new ResponseEntity<>(craftsmen,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(craftsmen,HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -35,9 +42,16 @@ public class CraftsmanService {
      * @param id the craftsman id
      * @return the craftsman with that id
      */
-    public Craftsman getCraftsmanById(int id) {
+    public ResponseEntity<?> getCraftsmanById(int id) {
 
-        return craftsmanRepository.findById(id).orElse(null);
+        Optional<Craftsman> craftsman = craftsmanRepository.findById(id);
+
+        if(craftsman.isPresent()) {
+            return new ResponseEntity<>(craftsman,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -53,7 +67,7 @@ public class CraftsmanService {
             return new ResponseEntity<>(craftsman, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>("No craftsman found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -62,11 +76,16 @@ public class CraftsmanService {
      * @param id the craftsman id
      * @return the craftstores owned by the craftsman with that id
      */
-    public List<Ownership> getCraftstoresByCraftsmanId(int id) {
+    public ResponseEntity<?> getCraftstoresByCraftsmanId(int id) {
 
         Optional<Craftsman> craftsman = craftsmanRepository.findById(id);
 
-        return craftsman.get().getCraftstoreList();
+        if(craftsman.isPresent()) {
+            return new ResponseEntity<>(craftsman.get().getCraftstoreList(),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -74,8 +93,12 @@ public class CraftsmanService {
      * @param craftsman the craftsman to be saved
      * @return the saved craftsman.
      */
-    public Craftsman addCraftsman(Craftsman craftsman){
+    public ResponseEntity<?> addCraftsman(Craftsman craftsman) {
 
-        return craftsmanRepository.save(craftsman);
+        try {
+            return new ResponseEntity<>(craftsmanRepository.save(craftsman),HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

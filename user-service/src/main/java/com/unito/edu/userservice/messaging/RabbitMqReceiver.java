@@ -6,6 +6,8 @@ import com.unito.edu.userservice.service.UserService;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,8 +27,15 @@ public class RabbitMqReceiver {
 
         System.out.println("User microservice received: " + comment);
 
-        userService.addComment(comment.getUserId(), new Comment(comment.getId(),
+        ResponseEntity<?> response = userService.addComment(comment.getUserId(), new Comment(comment.getId(),
                 comment.getCraftstoreId(),comment.getCraftstoreName(),comment.getPostDate(),comment.getText()));
+
+        if(response.getStatusCode() == HttpStatus.OK){
+            System.out.println("User microservice saved the comment: " + comment);
+        }
+        else{
+            System.out.println("User microservice NOT SAVED the comment: " + comment);
+        }
 
     }
 }

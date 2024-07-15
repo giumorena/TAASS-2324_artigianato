@@ -14,6 +14,9 @@ import { formatCurrency } from './utils';
 
 const gatewayURL = process.env.REACT_APP_API_BASE_URL;
 
+const ok = 'OK';
+const notFound = 'Not Found';
+
 // Fetches the sorted page with the search results based on the query string
 // Add noStore() here to prevent the response from being cached.
 // This is equivalent to in fetch(..., {cache: 'no-store'}).
@@ -22,7 +25,7 @@ export async function fetchFilteredSortedPagedCraftstores(query: string) {
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
-  if (!res.ok) {
+  if (res.statusText !== ok && res.statusText !== notFound) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch filtered sorted paged craftstores')
   }
@@ -102,7 +105,7 @@ export async function fetchCraftstoreCommentsById(id: number) {
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
-  if (!res.ok) {
+  if (res.statusText !== ok && res.statusText !== notFound) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch craftstore comments by id')
   }
@@ -118,7 +121,7 @@ export async function fetchUserCommentsById(id: number) {
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
-  if (!res.ok) {
+  if (res.statusText !== ok && res.statusText !== notFound) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch user comments by id')
   }
@@ -150,7 +153,7 @@ export async function fetchStoresByCraftsmanId(id:number) {
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
-  if (!res.ok) {
+  if (res.statusText !== ok && res.statusText !== notFound) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch craftsman stores')
   }
@@ -282,10 +285,9 @@ export async function fetchUserByEmail(email:string) {
     return res.json();
   }
   else if(res.statusText === 'Not Found'){
-    const errorResponse = {
+    return {
       status: res.statusText,
-    }
-    return errorResponse;
+    };
   }
   else{
     // This will activate the closest `error.js` Error Boundary

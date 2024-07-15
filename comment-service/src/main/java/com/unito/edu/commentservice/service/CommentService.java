@@ -6,10 +6,13 @@ import com.unito.edu.commentservice.repository.CommentRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -25,9 +28,16 @@ public class CommentService {
      *
      * @return a list of all comments.
      */
-    public List<Comment> getAllComments() {
+    public ResponseEntity<?> getAllComments() {
 
-        return commentRepository.findAll();
+        List<Comment> comments = commentRepository.findAll();
+
+        if(comments.size()>0){
+            return new ResponseEntity<>(comments, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(comments, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -35,9 +45,16 @@ public class CommentService {
      * @param id the comment id
      * @return the comment with that id
      */
-    public Comment getCommentById(int id) {
+    public ResponseEntity<?> getCommentById(int id) {
 
-        return commentRepository.findById(id).orElse(null);
+        Optional<Comment> comment = commentRepository.findById(id);
+
+        if(comment.isPresent()){
+            return new ResponseEntity<>(comment,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -46,12 +63,19 @@ public class CommentService {
      * @param comment the comment to be saved
      * @return the saved comment.
      */
-    public Comment addComment(Comment comment){
+    public ResponseEntity<?> addComment(Comment comment){
 
-        Comment commentSaved=commentRepository.save(comment);
+        Comment commentSaved;
+        try {
+            commentSaved = commentRepository.save(comment);
+        }
+        catch (Exception e){
+            System.out.println("Comment microservice has NOT SAVED and thus NOT SENT comment: " + comment);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         rabbitMqSender.send(commentSaved);
 
-        return commentSaved;
+        return new ResponseEntity<>(commentSaved,HttpStatus.OK);
     }
 }

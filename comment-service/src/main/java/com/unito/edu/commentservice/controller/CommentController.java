@@ -3,6 +3,7 @@ package com.unito.edu.commentservice.controller;
 import com.unito.edu.commentservice.model.Comment;
 import com.unito.edu.commentservice.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class CommentController {
      * @return a list of all comments.
      */
     @GetMapping("/getComments")
-    public List<Comment> getAllComments() {
+    public ResponseEntity<?> getAllComments() {
 
         return commentService.getAllComments();
     }
@@ -31,7 +32,7 @@ public class CommentController {
      * @return the comment with that id
      */
     @GetMapping("/getComment/{id}")
-    public Comment getCommentById(@PathVariable int id) {
+    public ResponseEntity<?> getCommentById(@PathVariable int id) {
 
         return commentService.getCommentById(id);
     }
@@ -43,7 +44,7 @@ public class CommentController {
      * @return the saved comment.
      */
     @PostMapping(value = "/addComment")
-    public Comment addComment(@RequestBody Comment comment){
+    public ResponseEntity<?> addComment(@RequestBody Comment comment){
 
         return commentService.addComment(comment);
     }

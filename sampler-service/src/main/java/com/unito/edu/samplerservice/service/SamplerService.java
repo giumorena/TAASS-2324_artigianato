@@ -5,6 +5,8 @@ import com.unito.edu.samplerservice.model.Sampler;
 import com.unito.edu.samplerservice.repository.ProductRepository;
 import com.unito.edu.samplerservice.repository.SamplerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +26,16 @@ public class SamplerService {
      *
      * @return a list of all samplers.
      */
-    public List<Sampler> getAllSamplers() {
+    public ResponseEntity<?> getAllSamplers() {
 
-        return samplerRepository.findAll();
+        List<Sampler> samplers = samplerRepository.findAll();
+
+        if(samplers.size()>0){
+            return new ResponseEntity<>(samplers, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(samplers, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -34,9 +43,16 @@ public class SamplerService {
      * @param id the sampler id
      * @return the sampler with that id
      */
-    public Sampler getSamplerById(int id) {
+    public ResponseEntity<?> getSamplerById(int id) {
 
-        return samplerRepository.findById(id).orElse(null);
+        Optional<Sampler> sampler = samplerRepository.findById(id);
+
+        if(sampler.isPresent()){
+            return new ResponseEntity<>(sampler,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -44,9 +60,14 @@ public class SamplerService {
      * @param sampler the sampler to be saved
      * @return the saved sampler
      */
-    public Sampler addSampler(Sampler sampler){
+    public ResponseEntity<?> addSampler(Sampler sampler){
 
-        return samplerRepository.save(sampler);
+        try {
+            return new ResponseEntity<>(samplerRepository.save(sampler),HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -54,9 +75,16 @@ public class SamplerService {
      * @param id the product id
      * @return the product with that id
      */
-    public Product getProductById(int id){
+    public ResponseEntity<?> getProductById(int id){
 
-        return productRepository.findById(id).orElse(null);
+        Optional<Product> product = productRepository.findById(id);
+
+        if(product.isPresent()){
+            return new ResponseEntity<>(product,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -65,11 +93,22 @@ public class SamplerService {
      * @param product the product to be added
      * @return the updated sampler
      */
-    public Sampler addProduct(int id, Product product){
+    public ResponseEntity<?> addProduct(int id, Product product){
 
         Optional<Sampler> sampler = samplerRepository.findById(id);
-        sampler.get().getProductList().add(product);
-        return samplerRepository.save(sampler.get());
+
+        if(sampler.isPresent()) {
+            sampler.get().getProductList().add(product);
+            try {
+                return new ResponseEntity<>(samplerRepository.save(sampler.get()),HttpStatus.OK);
+            }
+            catch(Exception e){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -78,12 +117,23 @@ public class SamplerService {
      * @param product the product as it should be
      * @return the updated product
      */
-    public Product updateProduct(int id, Product product){
+    public ResponseEntity<?> updateProduct(int id, Product product){
 
         Optional<Product> oldProduct = productRepository.findById(id);
-        oldProduct.get().setDescription(product.getDescription());
-        oldProduct.get().setPrice(product.getPrice());
-        return productRepository.save(oldProduct.get());
+
+        if(oldProduct.isPresent()) {
+            oldProduct.get().setDescription(product.getDescription());
+            oldProduct.get().setPrice(product.getPrice());
+            try {
+                return new ResponseEntity<>(productRepository.save(oldProduct.get()),HttpStatus.OK);
+            }
+            catch(Exception e){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
@@ -108,8 +158,20 @@ public class SamplerService {
      * This method is used to delete a product.
      * @param id the product id
      */
-    public void deleteProduct(int id){
+    public ResponseEntity<?> deleteProduct(int id){
 
-        productRepository.deleteById(id);
+        Optional<Product> product = productRepository.findById(id);
+
+        if(product.isPresent()) {
+            try {
+                productRepository.deleteById(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
