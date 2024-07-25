@@ -24,11 +24,11 @@ export default async function Page({
     const sparams=new URLSearchParams(searchParams);
 
     if (!sparams.has('page')){
-        sparams.set('page','1');
+        sparams.set('page',process.env.NEXT_APP_DEFAULT_PAGE_NUMBER as string);
     }
 
     //items per page
-    sparams.set('size','1');
+    sparams.set('size',process.env.NEXT_APP_DEFAULT_PAGE_SIZE as string);
 
     const query = sparams.toString() || '';
 

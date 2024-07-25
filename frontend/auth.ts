@@ -13,6 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Keycloak({
             profile(profile) {
+                console.log('profile:' + JSON.stringify(profile));
                 return { name: profile.name,
                     email: profile.email,
                     category: profile.category, //exposes the category attribute on user object
@@ -23,6 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
     callbacks: {
         authorized: async ({ auth, request: { nextUrl } }) => {
+
             // !!auth?.user is equivalent to auth?.user !== null, so the person logged in
             const isCraftsman = !!auth?.user && auth?.user.category === 'craftsman';
             const isUser = !!auth?.user && auth?.user.category === 'user';
@@ -49,6 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return true;
         },
         async signIn({ user }) {
+            console.log('callback signIn, user:' + JSON.stringify(user));
             if(user && user.category && user.email && user.name){
                 //Craftsman is assumed to be in the craftsman-service database
                 if(user.category === 'craftsman'){

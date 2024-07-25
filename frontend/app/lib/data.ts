@@ -5,7 +5,7 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
-const gatewayURL = process.env.REACT_APP_API_BASE_URL;
+const gatewayURL = process.env.NEXT_APP_API_BASE_URL;
 
 const ok = 'OK';
 const notFound = 'Not Found';
