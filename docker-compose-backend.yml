@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.2'
 services:
   service-registry:
     build: ./service-registry/
@@ -216,47 +216,6 @@ services:
     networks:
       - craftnetwork
     restart: unless-stopped
-
-  keycloak:
-    container_name: keycloak
-    image: "quay.io/keycloak/keycloak:latest"
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    command: ["start-dev", "--http-port=8090"]
-    ports:
-      - "8090:8090"
-    networks:
-      - craftnetwork
-
-  # Development
-  front-dev:
-    image: front-dev
-    container_name: front-dev
-    build:
-      context: ./frontend
-      target: deps # si ferma alla prima fase del dockerfile, non esegue le altre due (build e run)
-    ports:
-      - '3000:3000'
-    depends_on:
-      - api-gateway
-      - keycloak
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
-    environment:
-      NEXT_APP_API_BASE_URL: http://api-gateway:8080
-      NEXT_APP_DEFAULT_PAGE_SIZE: 1
-      NEXT_APP_DEFAULT_PAGE_NUMBER: 1
-      AUTH_URL: http://localhost:3000/api/auth
-      AUTH_KEYCLOAK_ID: craftclient
-      AUTH_KEYCLOAK_SECRET: bqANx87hQ2bALhqtjqglWAGCLQW8ITmi
-      AUTH_KEYCLOAK_ISSUER: http://host.docker.internal:8090/realms/craftrealm
-    networks:
-      - craftnetwork
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
 
 networks:
   craftnetwork:
