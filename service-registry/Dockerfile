@@ -10,3 +10,5 @@ COPY --from=build /workspace/target/*.jar app.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
 
 # docker build --tag service-registry .
+# docker tag service-registry gmorena/service-registry
+# docker push gmorena/service-registry

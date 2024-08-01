@@ -9,6 +9,7 @@ services:
     command: start-dev
     ports:
       - "8090:8080"
+    restart: unless-stopped
 
 # docker compose -f docker-compose-keycloack.yml build
 # docker compose -f docker-compose-keycloack.yml up -d

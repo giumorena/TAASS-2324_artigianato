@@ -10,3 +10,5 @@ COPY --from=build /workspace/target/*.jar app.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
 
 # docker build --tag comment-service .
+# docker tag comment-service gmorena/comment-service
+# docker push gmorena/comment-service

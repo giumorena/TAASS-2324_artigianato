@@ -10,3 +10,5 @@ COPY --from=build /workspace/target/*.jar app.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
 
 # docker build --tag sampler-service .
+# docker tag sampler-service gmorena/sampler-service
+# docker push gmorena/sampler-service

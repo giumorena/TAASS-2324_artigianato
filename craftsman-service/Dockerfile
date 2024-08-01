@@ -10,3 +10,5 @@ COPY --from=build /workspace/target/*.jar app.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
 
 # docker build --tag craftsman-service .
+# docker tag craftsman-service gmorena/craftsman-service
+# docker push gmorena/craftsman-service

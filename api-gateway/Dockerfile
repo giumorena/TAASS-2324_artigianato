@@ -10,3 +10,5 @@ COPY --from=build /workspace/target/*.jar app.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
 
 # docker build --tag api-gateway .
+# docker tag api-gateway gmorena/api-gateway
+# docker push gmorena/api-gateway

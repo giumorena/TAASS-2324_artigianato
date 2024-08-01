@@ -37,3 +37,5 @@ COPY --from=builder /app/package.json ./
 CMD ["npm", "run", "start"]
 
 # docker build --tag frontend .
+# docker build --target deps -t gmorena/front-dev .
+# docker push gmorena/front-dev

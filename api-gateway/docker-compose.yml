@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.8'
 services:
   service-registry:
     build: ../service-registry/
@@ -8,6 +8,7 @@ services:
       - "8761:8761"
     networks:
       - craftnetwork
+    restart: unless-stopped
 
   api-gateway:
     build: .
@@ -19,6 +20,7 @@ services:
       - service-registry
     networks:
       - craftnetwork
+    restart: unless-stopped
 
 networks:
   craftnetwork:
