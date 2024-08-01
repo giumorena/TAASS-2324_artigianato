@@ -1,7 +1,8 @@
 version: '3.8'
 services:
   service-registry:
-    image: gmorena/service-registry
+    build: ../service-registry/
+    image: service-registry
     container_name: service-registry
     ports:
       - "8761:8761"
@@ -10,7 +11,8 @@ services:
     restart: unless-stopped
 
   api-gateway:
-    image: gmorena/api-gateway
+    build: ../api-gateway/
+    image: api-gateway
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -42,7 +44,8 @@ services:
       restart: unless-stopped
 
   comment-service:
-    image: gmorena/comment-service
+    build: ../comment-service/
+    image: comment-service
     container_name: comment-service
     ports:
       - "8084:8084"
@@ -78,7 +81,8 @@ services:
       restart: unless-stopped
 
   sampler-service:
-    image: gmorena/sampler-service
+    build: ../sampler-service/
+    image: sampler-service
     container_name: sampler-service
     ports:
       - "8083:8083"
@@ -112,7 +116,8 @@ services:
       restart: unless-stopped
 
   craftstore-service:
-    image: gmorena/craftstore-service
+    build: ../craftstore-service/
+    image: craftstore-service
     container_name: craftstore-service
     ports:
       - "8082:8082"
@@ -147,7 +152,8 @@ services:
       restart: unless-stopped
 
   craftsman-service:
-    image: gmorena/craftsman-service
+    build: ../craftsman-service/
+    image: craftsman-service
     container_name: craftsman-service
     ports:
       - "8081:8081"
@@ -181,7 +187,8 @@ services:
       restart: unless-stopped
 
   user-service:
-    image: gmorena/user-service
+    build: ../user-service/
+    image: user-service
     container_name: user-service
     ports:
       - "8085:8085"
@@ -227,8 +234,11 @@ services:
 
   # Development
   front-dev:
-    image: gmorena/front-dev
+    image: front-dev
     container_name: front-dev
+    build:
+      context: .
+      target: deps # si ferma alla prima fase del dockerfile, non esegue le altre due (build e run)
     ports:
       - '3000:3000'
     depends_on:

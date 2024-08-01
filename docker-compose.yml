@@ -1,17 +1,16 @@
 version: '3.8'
 services:
   service-registry:
-    build: ./service-registry/
-    image: service-registry
+    image: gmorena/service-registry
     container_name: service-registry
     ports:
       - "8761:8761"
     networks:
       - craftnetwork
+    restart: unless-stopped
 
   api-gateway:
-    build: ./api-gateway/
-    image: api-gateway
+    image: gmorena/api-gateway
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -24,6 +23,7 @@ services:
       - user-service
     networks:
       - craftnetwork
+    restart: unless-stopped
 
   mariadb-comment:
     container_name: mariadb-comment
@@ -42,8 +42,7 @@ services:
       restart: unless-stopped
 
   comment-service:
-    build: ./comment-service/
-    image: comment-service
+    image: gmorena/comment-service
     container_name: comment-service
     ports:
       - "8084:8084"
@@ -79,8 +78,7 @@ services:
       restart: unless-stopped
 
   sampler-service:
-    build: ./sampler-service/
-    image: sampler-service
+    image: gmorena/sampler-service
     container_name: sampler-service
     ports:
       - "8083:8083"
@@ -114,8 +112,7 @@ services:
       restart: unless-stopped
 
   craftstore-service:
-    build: ./craftstore-service/
-    image: craftstore-service
+    image: gmorena/craftstore-service
     container_name: craftstore-service
     ports:
       - "8082:8082"
@@ -150,8 +147,7 @@ services:
       restart: unless-stopped
 
   craftsman-service:
-    build: ./craftsman-service/
-    image: craftsman-service
+    image: gmorena/craftsman-service
     container_name: craftsman-service
     ports:
       - "8081:8081"
@@ -185,8 +181,7 @@ services:
       restart: unless-stopped
 
   user-service:
-    build: ./user-service/
-    image: user-service
+    image: gmorena/user-service
     container_name: user-service
     ports:
       - "8085:8085"
@@ -228,14 +223,12 @@ services:
       - "8090:8090"
     networks:
       - craftnetwork
+    restart: unless-stopped
 
   # Development
   front-dev:
-    image: front-dev
+    image: gmorena/front-dev
     container_name: front-dev
-    build:
-      context: ./frontend
-      target: deps # si ferma alla prima fase del dockerfile, non esegue le altre due (build e run)
     ports:
       - '3000:3000'
     depends_on:
@@ -257,6 +250,7 @@ services:
       - craftnetwork
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    restart: unless-stopped
 
 networks:
   craftnetwork:
