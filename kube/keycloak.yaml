@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - args:
+            - start-dev
+            - --http-port=8090
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: admin
+          image: quay.io/keycloak/keycloak:latest
+          name: keycloak
+          ports:
+            - containerPort: 8090
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - port: 8090
+      targetPort: 8090
+  type: LoadBalancer
+
+  # kubectl apply -f keycloak.yaml
+  # kubectl port-forward svc/keycloak 8090:8090
+  # kubectl delete svc/keycloak
+  # kubectl delete deployment.apps/keycloak

@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mariadb-sampler
+  name: mariadb-sampler
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mariadb-sampler
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sampler-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mariadb-sampler
+  name: mariadb-sampler
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-sampler
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-sampler
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "true"
+            - name: MARIADB_DATABASE
+              value: dbsamplers
+            - name: MARIADB_PASSWORD
+              value: sampler
+            - name: MARIADB_USER
+              value: sampler
+          image: mariadb
+          name: mariadb-sampler
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: sampler-pv
+              mountPath: /var/lib/mariadb/data
+      volumes:
+        - name: sampler-pv
+          persistentVolumeClaim:
+            claimName: sampler-pv
+      restartPolicy: Always
+
+# kubectl apply -f mariadb-sampler.yaml
+# kubectl delete svc/mariadb-sampler
+# kubectl delete deployment.app/mariadb-sampler

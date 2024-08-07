@@ -6,9 +6,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    command: start-dev
+    command: [ "start-dev", "--http-port=8090" ]
     ports:
-      - "8090:8080"
+      - "8090:8090"
     restart: unless-stopped
 
 # docker compose -f docker-compose-keycloack.yml build

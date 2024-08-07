@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Program Files\Kompose\kompose.exe convert
+    kompose.version: 1.34.0 (cbf2835db)
+  labels:
+    io.kompose.service: mariadb-user
+  name: mariadb-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mariadb-user
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Program Files\Kompose\kompose.exe convert
+        kompose.version: 1.34.0 (cbf2835db)
+      labels:
+        io.kompose.service: mariadb-user
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "true"
+            - name: MARIADB_DATABASE
+              value: dbusers
+            - name: MARIADB_PASSWORD
+              value: user
+            - name: MARIADB_USER
+              value: user
+            - name: restart
+              value: unless-stopped
+          image: mariadb
+          name: mariadb-user
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/mariadb/data
+              name: user-data
+      restartPolicy: Always
+      volumes:
+        - name: user-data
+          persistentVolumeClaim:
+            claimName: user-data

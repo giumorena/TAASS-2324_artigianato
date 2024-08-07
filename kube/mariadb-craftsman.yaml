@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: craftsman-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-craftsman
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-craftsman
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-craftsman
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "true"
+            - name: MARIADB_DATABASE
+              value: dbcraftsmen
+            - name: MARIADB_PASSWORD
+              value: craftsman
+            - name: MARIADB_USER
+              value: craftsman
+          image: mariadb
+          name: mariadb-craftsman
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: craftsman-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: craftsman-storage
+          persistentVolumeClaim:
+            claimName: craftsman-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-craftsman
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mariadb-craftsman
+
+# kubectl apply -f mariadb-craftsman.yaml
+# kubectl delete svc/mariadb-craftsman
+# kubectl delete deployment.apps/mariadb-craftsman

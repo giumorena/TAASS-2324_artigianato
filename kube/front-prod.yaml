@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-prod
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: front-prod
+    spec:
+      containers:
+        - env:
+            - name: AUTH_SECRET
+              value: hAaf82P0UVxzonVHHAZxEA1rM3VHK/BqXPkPhKlHG1c=
+            - name: AUTH_KEYCLOAK_ID
+              value: craftclient
+            - name: AUTH_KEYCLOAK_ISSUER
+              value: http://keycloak:8090/realms/craftrealm
+            - name: AUTH_KEYCLOAK_SECRET
+              value: bqANx87hQ2bALhqtjqglWAGCLQW8ITmi
+            - name: AUTH_URL
+              value: http://localhost:3000/api/auth
+            - name: NEXT_APP_API_BASE_URL
+              value: http://api-gateway:8080
+            - name: NEXT_APP_DEFAULT_PAGE_NUMBER
+              value: "1"
+            - name: NEXT_APP_DEFAULT_PAGE_SIZE
+              value: "1"
+          image: gmorena/front-prod
+          name: front-prod
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "keycloak"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-prod
+spec:
+  selector:
+    app: front-prod
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+
+  # kubectl apply -f front-prod.yaml
+  # kubectl port-forward svc/front-prod 3000:3000
+  # kubectl delete svc/front-prod
+  # kubectl delete deployment.apps/front-prod

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: SERVER_PORT
+              value: "8085"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mariadb-user:3306/dbusers
+            - name: SPRING_DATASOURCE_USERNAME
+              value: user
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: user
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+          image: gmorena/user-service
+          name: user-service
+          ports:
+            - containerPort: 8085
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  ports:
+    - port: 8085
+      targetPort: 8085
+  selector:
+    app: user-service
+  type: NodePort
+
+# kubectl apply -f user-service.yaml
+# kubectl delete svc/user-service
+# kubectl delete deployment.apps/user-service

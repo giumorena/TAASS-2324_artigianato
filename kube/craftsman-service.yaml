@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: craftsman-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: craftsman-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: craftsman-service
+    spec:
+      containers:
+        - env:
+            - name: SERVER_PORT
+              value: "8081"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mariadb-craftsman:3306/dbcraftsmen
+            - name: SPRING_DATASOURCE_USERNAME
+              value: craftsman
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: craftsman
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+          image: gmorena/craftsman-service
+          name: craftsman-service
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: craftsman-service
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+  selector:
+    app: craftsman-service
+  type: NodePort
+
+# kubectl apply -f craftsman-service.yaml
+# kubectl delete svc/craftsman-service
+# kubectl delete deployment.apps/craftsman-service

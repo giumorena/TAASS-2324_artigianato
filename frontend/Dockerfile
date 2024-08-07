@@ -39,3 +39,5 @@ CMD ["npm", "run", "start"]
 # docker build --tag frontend .
 # docker build --target deps -t gmorena/front-dev .
 # docker push gmorena/front-dev
+# docker build --tag gmorena/front-prod .
+# docker push gmorena/front-prod

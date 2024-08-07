@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-registry
+  labels:
+    app: service-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-registry
+  template:
+    metadata:
+      labels:
+        app: service-registry
+    spec:
+      containers:
+        - image: gmorena/service-registry
+          name: service-registry
+          ports:
+            - containerPort: 8761
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-registry
+spec:
+  selector:
+    app: service-registry
+  ports:
+    - port: 8761
+      targetPort: 8761
+  type: LoadBalancer
+
+# kubectl apply -f service-registry.yaml
+# kubectl port-forward svc/service-registry 8761:8761
+# kubectl delete svc/service-registry
+# kubectl delete deployment.app/service-registry

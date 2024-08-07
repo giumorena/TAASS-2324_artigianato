@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: comment-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-comment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-comment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-comment
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "true"
+            - name: MARIADB_DATABASE
+              value: dbcomments
+            - name: MARIADB_PASSWORD
+              value: comment
+            - name: MARIADB_USER
+              value: comment
+          image: mariadb
+          name: mariadb-comment
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: comment-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: comment-storage
+          persistentVolumeClaim:
+            claimName: comment-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-comment
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mariadb-comment
+
+# kubectl apply -f mariadb-comment.yaml
+# kubectl delete svc/mariadb-comment
+# kubectl delete deployment.apps/mariadb-comment
