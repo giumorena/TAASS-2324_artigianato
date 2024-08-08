@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
-  labels:
-    app: api-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: api-gateway
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -37,4 +37,4 @@ spec:
 # kubectl apply -f api-gateway.yaml
 # kubectl port-forward svc/api-gateway 8080:8080
 # kubectl delete svc/api-gateway
-# kubectl delete deployment.app/api-gateway
+# kubectl delete deployment.apps/api-gateway

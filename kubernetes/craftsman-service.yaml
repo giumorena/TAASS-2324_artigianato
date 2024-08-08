@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: craftsman-service
   name: craftsman-service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: craftsman-service
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -36,8 +36,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: craftsman-service
   name: craftsman-service
 spec:
   ports:
@@ -49,4 +47,4 @@ spec:
 
 # kubectl apply -f craftsman-service.yaml
 # kubectl delete svc/craftsman-service
-# kubectl delete deployment.app/craftsman-service
+# kubectl delete deployment.apps/craftsman-service

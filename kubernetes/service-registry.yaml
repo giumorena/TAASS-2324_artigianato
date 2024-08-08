@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: service-registry
-  labels:
-    app: service-registry
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: service-registry
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -37,4 +37,4 @@ spec:
 # kubectl apply -f service-registry.yaml
 # kubectl port-forward svc/service-registry 8761:8761
 # kubectl delete svc/service-registry
-# kubectl delete deployment.app/service-registry
+# kubectl delete deployment.apps/service-registry

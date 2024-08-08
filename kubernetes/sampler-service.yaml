@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: sampler-service
   name: sampler-service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: sampler-service
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -36,8 +36,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: sampler-service
   name: sampler-service
 spec:
   ports:
@@ -49,4 +47,4 @@ spec:
 
 # kubectl apply -f sampler-service.yaml
 # kubectl delete svc/sampler-service
-# kubectl delete deployment.app/sampler-service
+# kubectl delete deployment.apps/sampler-service

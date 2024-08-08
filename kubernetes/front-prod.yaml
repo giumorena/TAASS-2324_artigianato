@@ -21,7 +21,7 @@ spec:
             - name: AUTH_KEYCLOAK_ID
               value: craftclient
             - name: AUTH_KEYCLOAK_ISSUER
-              value: http://keycloak:8090/realms/craftrealm
+              value: http://host.docker.internal/realms/craftrealm
             - name: AUTH_KEYCLOAK_SECRET
               value: bqANx87hQ2bALhqtjqglWAGCLQW8ITmi
             - name: AUTH_URL
@@ -37,10 +37,6 @@ spec:
           ports:
             - containerPort: 3000
               protocol: TCP
-      hostAliases:
-        - ip: "127.0.0.1"
-          hostnames:
-            - "keycloak"
       restartPolicy: Always
 ---
 apiVersion: v1
