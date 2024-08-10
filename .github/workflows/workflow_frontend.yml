@@ -1,4 +1,4 @@
-name: craft_CI_test_backend
+name: craft_CI_frontend
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
 jobs:
 
 # Job to build docker images
-  build_and_push_craftsman:
-     name: Build and push craftsman image to Docker Hub
+  build_and_push_frontend:
+     name: Build and push frontend image (for production) to Docker Hub
      runs-on: ubuntu-latest
 
      steps:
@@ -28,9 +28,10 @@ jobs:
            username: ${{ secrets.DOCKERHUB_USERNAME }}
            password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-       - name: Build and push craftsman
+       - name: Build and push frontend (for production)
          uses: docker/build-push-action@v6
          with:
-           context: /home/runner/work/TAASS-2324_artigianato/TAASS-2324_artigianato/craftsman-service/
+           # add-hosts: host.docker.internal:host-gateway
+           context: /home/runner/work/TAASS-2324_artigianato/TAASS-2324_artigianato/frontend/
            push: true
-           tags: ${{ secrets.DOCKERHUB_USERNAME }}/craftsman-service
+           tags: ${{ secrets.DOCKERHUB_USERNAME }}/front-prod
