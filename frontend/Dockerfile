@@ -27,7 +27,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV production
-RUN npm ci
+# RUN npm ci
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 COPY --from=builder /app/.next ./.next
