@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: craftstore-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: craftstore-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: craftstore-service
+    spec:
+      containers:
+        - env:
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: SERVER_PORT
+              value: "8082"
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mariadb://mariadb-craftstore:3306/dbcraftstores
+            - name: SPRING_DATASOURCE_USERNAME
+              value: craftstore
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: craftstore
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+          image: gmorena/craftstore-service
+          name: craftstore-service
+          ports:
+            - containerPort: 8082
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: craftstore-service
+spec:
+  ports:
+    - port: 8082
+      targetPort: 8082
+  selector:
+    app: craftstore-service
+  type: NodePort
+
+# kubectl apply -f craftstore-service.yaml
+# kubectl delete svc/craftstore-service
+# kubectl delete deployment.apps/craftstore-service

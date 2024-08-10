@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: craftstore-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-craftstore
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-craftstore
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-craftstore
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_ALLOW_EMPTY_ROOT_PASSWORD
+              value: "true"
+            - name: MARIADB_DATABASE
+              value: dbcraftstores
+            - name: MARIADB_PASSWORD
+              value: craftstore
+            - name: MARIADB_USER
+              value: craftstore
+          image: mariadb
+          name: mariadb-craftstore
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: craftstore-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: craftstore-storage
+          persistentVolumeClaim:
+            claimName: craftstore-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-craftstore
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mariadb-craftstore
+
+# kubectl apply -f mariadb-craftstore.yaml
+# kubectl delete svc/mariadb-craftstore
+# kubectl delete deployment.apps/mariadb-craftstore
