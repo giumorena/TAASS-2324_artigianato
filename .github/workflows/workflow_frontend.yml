@@ -31,7 +31,7 @@ jobs:
        - name: Build and push frontend (for production)
          uses: docker/build-push-action@v6
          with:
-           add-hosts: host.docker.internal:host-gateway
+           # add-hosts: host.docker.internal:host-gateway
            context: /home/runner/work/TAASS-2324_artigianato/TAASS-2324_artigianato/frontend/
            push: true
            tags: ${{ secrets.DOCKERHUB_USERNAME }}/front-prod
