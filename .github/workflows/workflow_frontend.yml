@@ -32,6 +32,6 @@ jobs:
          uses: docker/build-push-action@v6
          with:
            # add-hosts: host.docker.internal:host-gateway
-           context: /home/runner/work/TAASS-2324_artigianato/TAASS-2324_artigianato/frontend/
+           context: /home/runner/work/TAASS-2324_artigianato/TAASS-2324_artigianato/frontend/app
            push: true
            tags: ${{ secrets.DOCKERHUB_USERNAME }}/front-prod
