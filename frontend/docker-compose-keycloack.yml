@@ -13,3 +13,4 @@ services:
 
 # docker compose -f docker-compose-keycloack.yml build
 # docker compose -f docker-compose-keycloack.yml up -d
+# docker compose -f docker-compose-keycloack.yml down

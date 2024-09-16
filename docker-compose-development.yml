@@ -275,4 +275,6 @@ volumes:
   user-data:
   rabbitmq-data:
 
-# docker-compose up
+# docker compose -f docker-compose-development.yml build
+# docker compose -f docker-compose-development.yml up -d
+# docker compose -f docker-compose-development.yml down
