@@ -16,7 +16,7 @@ This application allows
   - To **view and edit** their stores' **sampler** (add new products, edit and delete products from the sampler)
 
 ## Architecture overview
-The architecture is showed in the related [file](architecture.bmp), it is a **hybrid architecture** consisting of
+Architecture is shown in the related [file](architecture.bmp), it is a **hybrid architecture** consisting of
 - **Backend**
   - Written using **Spring Boot**
   - Based on the following **microservices**
