@@ -1,7 +1,7 @@
 # Frontend 'Il bello dell'artigianato'
 
 ## Description
-This is responsive a web application written using **Next.js** (React framework)
+This is a responsive web application written using **Next.js** (React framework)
 with the starter template for the Next.js App Router Course.
 
 This app uses the **Keycloak** provider for authentication.

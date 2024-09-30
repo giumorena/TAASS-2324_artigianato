@@ -4,7 +4,7 @@
 ## Description
 This application allows
 - **Everyone**
-  - To **search** for stores based on multiple search criteria (name, category, region, province,city)
+  - To **search** for stores based on multiple search criteria (name, category, region, province, city)
   - To view **information** about a store (name, description, owners, contacts, addresses)
   - To view **comments** posted by users related to a store
   - To view a **sampler** with the most significant products sold in a store
@@ -16,7 +16,7 @@ This application allows
   - To **view and edit** their stores' **sampler** (add new products, edit and delete products from the sampler)
 
 ## Architecture overview
-This is a **hybrid architecture** consisting of
+The architecture is showed in the related [file](architecture.bmp), it is a **hybrid architecture** consisting of
 - **Backend**
   - Written using **Spring Boot**
   - Based on the following **microservices**
@@ -104,7 +104,7 @@ At the end **remember to delete** all deployments and services by running the co
 kubectl delete --all svc
 kubectl delete --all deployment.apps
 ```
-Alternatively you can **delete everything** that was created with the `kubectl apply` command by running in frontend directory
+Alternatively you can **delete everything** that was created with the `kubectl apply` command by running in kubernetes directory
 ```shell
 kubectl delete -f .
 ```
